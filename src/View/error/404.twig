@@ -1,0 +1,18 @@
+{% extends "error/base.twig" %}
+
+{% block head %}
+    {{ parent() }}
+
+    <meta name="keywords" content="not found, 404, error">
+    <title>Page not found &mdash; TheAdmin</title>
+{% endblock %}
+
+{% block content %}
+
+    <h1 class="text-secondary lh-1" style="font-size: 200px">404</h1>
+    <hr class="w-30px">
+    <h3 class="text-uppercase">Page not found!</h3>
+
+    <p class="lead">Seems you're looking for something that doesn't exist.</p>
+
+{% endblock %}

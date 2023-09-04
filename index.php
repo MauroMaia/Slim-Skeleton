@@ -2,41 +2,41 @@
 
 declare(strict_types=1);
 
-use App\Application\Handlers\HttpErrorHandler;
-use App\Application\Handlers\ShutdownHandler;
-use App\Application\ResponseEmitter\ResponseEmitter;
-use App\Application\Settings\SettingsInterface;
-use DI\ContainerBuilder;
-use Slim\Factory\AppFactory;
+use App\Infrastructure\Slim\Handlers\HttpErrorHandler;
+use App\Infrastructure\Slim\Handlers\ShutdownHandler;
+use App\Infrastructure\Settings\SettingsInterface;
+use DI\Bridge\Slim\Bridge;
 use Slim\Factory\ServerRequestCreatorFactory;
 
-require __DIR__ . '/../vendor/autoload.php';
+require __DIR__ . '/vendor/autoload.php';
+
+// Start PHP session
+session_start();
 
 // Instantiate PHP-DI ContainerBuilder
-$containerBuilder = require __DIR__ . '/../app/dependencies.php';
+$containerBuilder = require __DIR__ . '/src/dependencies.php';
 
 if (false) { // Should be set to true in production
-	$containerBuilder->enableCompilation(__DIR__ . '/../var/cache');
+	$containerBuilder->enableCompilation(__DIR__ . '/var/cache');
 }
 
 // Set up repositories
-$repositories = require __DIR__ . '/../app/repositories.php';
+$repositories = require __DIR__ . '/src/repositories.php';
 $repositories($containerBuilder);
 
 // Build PHP-DI Container instance
 $container = $containerBuilder->build();
 
 // Instantiate the app
-AppFactory::setContainer($container);
-$app = AppFactory::create();
+$app = Bridge::create($container);
 $callableResolver = $app->getCallableResolver();
 
 // Register middleware
-$middleware = require __DIR__ . '/../app/middleware.php';
+$middleware = require __DIR__ . '/src/middleware.php';
 $middleware($app);
 
 // Register routes
-$routes = require __DIR__ . '/../app/routes.php';
+$routes = require __DIR__ . '/src/routes.php';
 $routes($app);
 
 /** @var SettingsInterface $settings */
@@ -63,12 +63,11 @@ $app->addRoutingMiddleware();
 
 // Add Body Parsing Middleware
 $app->addBodyParsingMiddleware();
+$app->setBasePath(BASE_PATH);
 
 // Add Error Middleware
 $errorMiddleware = $app->addErrorMiddleware($displayErrorDetails, $logError, $logErrorDetails);
 $errorMiddleware->setDefaultErrorHandler($errorHandler);
 
-// Run App & Emit Response
-$response = $app->handle($request);
-$responseEmitter = new ResponseEmitter();
-$responseEmitter->emit($response);
+// Run App
+$app->run();

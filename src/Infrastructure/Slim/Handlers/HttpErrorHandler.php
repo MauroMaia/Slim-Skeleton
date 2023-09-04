@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Handlers;
+namespace App\Infrastructure\Slim\Handlers;
 
 use App\Application\Actions\ActionError;
 use App\Application\Actions\ActionPayload;
@@ -47,6 +47,15 @@ class HttpErrorHandler extends SlimErrorHandler
                 $error->setType(ActionError::BAD_REQUEST);
             } elseif ($exception instanceof HttpNotImplementedException) {
                 $error->setType(ActionError::NOT_IMPLEMENTED);
+            }
+        }
+
+        if (!$this->displayErrorDetails) {
+            $response = $this->responseFactory->createResponse(303);
+            if ($statusCode >= 500) {
+                return $response->withHeader('Location', '/500/');
+            } else {
+                return $response->withHeader('Location', '/404/');
             }
         }
 

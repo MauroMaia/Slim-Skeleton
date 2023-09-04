@@ -13,8 +13,17 @@ interface UserRepository
 
     /**
      * @param int $id
+     *
      * @return User
      * @throws UserNotFoundException
      */
-    public function findUserOfId(int $id): User;
+    public function findUserById(int $id): User;
+
+    /**
+     * @param string $username
+     *
+     * @return User
+     * @throws UserNotFoundException
+     */
+    public function findUserByUsername(string $username): User;
 }

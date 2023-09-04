@@ -40,7 +40,7 @@ class InMemoryUserRepository implements UserRepository
     /**
      * {@inheritdoc}
      */
-    public function findUserOfId(int $id): User
+    public function findUserById(int $id): User
     {
         if (!isset($this->users[$id])) {
             throw new UserNotFoundException();

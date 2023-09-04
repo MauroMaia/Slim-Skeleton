@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {% block head %}
+        <title>{{ app_name }}</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="description" content="{{ app_description }}">
+
+        <!-- Fonts -->
+        <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,300i"
+              rel="stylesheet">
+
+        <!-- Styles -->
+        <link href="{{ base_path }}/assets/css/core.min.css" rel="stylesheet">
+        <link href="{{ base_path }}/assets/css/app.css" rel="stylesheet">
+        <link href="{{ base_path }}/assets/css/style.css" rel="stylesheet">
+
+        <!-- Favicons -->
+        <link rel="apple-touch-icon" href="{{ base_path }}/assets/img/apple-touch-icon.png">
+        <link rel="icon" href="{{ base_path }}/assets/img/favicon.ico">
+    {% endblock %}
+</head>
+
+<body>
+
+<div class="row no-margin h-fullscreen" style="padding-top: 10%">
+
+    <div class="col-12">
+        <div class="card card-transparent mx-auto text-center">
+
+            {% block content %}{% endblock %}
+
+            <br>
+
+            <ul class="nav nav-primary nav-dotted nav-dot-separated justify-content-center fs-14">
+                <li class="nav-item">
+                    <a class="nav-link" href="mailto:dev@maurofilipemaia.dev">Report problem</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ base_path }}/">Return home</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    {{ source('footer.twig') }}
+
+</div>
+
+
+<!-- Scripts -->
+<script src="{{ base_path }}/assets/js/core.min.js"></script>
+<script src="{{ base_path }}/assets/js/app.js"></script>
+<script src="{{ base_path }}/assets/js/script.js"></script>
+
+</body>
+
+</html>

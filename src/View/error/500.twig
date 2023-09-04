@@ -1,0 +1,18 @@
+{% extends "error/base.twig" %}
+
+{% block head %}
+    {{ parent() }}
+
+    <meta name="keywords" content="error, 500">
+    <title>Internal server error &mdash; TheAdmin</title>
+{% endblock %}
+
+{% block content %}
+
+    <h1 class="text-secondary lh-1" style="font-size: 200px">500</h1>
+    <hr class="w-30px">
+    <h3 class="text-uppercase">Internal server error</h3>
+
+    <p class="lead">Looks like we have an internal issue, please try again in couple of minutes.</p>
+
+{% endblock %}

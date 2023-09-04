@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <base href="{{ base_path }}/">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>{{  app_name }}</title>
+    <meta name="description" content="{{ app_description }}">
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,300i"
+          rel="stylesheet">
+
+    <!-- Styles -->
+    <link href="{{ base_path }}/assets/css/core.min.css" rel="stylesheet">
+    <link href="{{ base_path }}/assets/css/app.css" rel="stylesheet">
+    <link href="{{ base_path }}/assets/css/style.css" rel="stylesheet">
+
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" href="{{ base_path }}/assets/img/apple-touch-icon.png">
+    <link rel="icon" href="{{ base_path }}/assets/img/favicon.ico">
+
+    <meta http-equiv="Cache-Control" content="no-cache"/>
+    <meta http-equiv="Pragma" content="no-cache"/>
+    <meta http-equiv="Expires" content="0" />
+
+    {% block head %} {% endblock %}
+</head>
+
+<body>
+
+<!-- Preloader -->
+<div class="preloader">
+    <div class="spinner-dots">
+        <span class="dot1"></span>
+        <span class="dot2"></span>
+        <span class="dot3"></span>
+    </div>
+</div>
+
+<!-- Sidebar -->
+{% include 'sidebar/aside.twig' %}
+<!-- END Sidebar -->
+
+<!-- TopBar -->
+{% include 'topbar/main.twig' %}
+<!-- END TopBar -->
+<!-- Main container -->
+<main class="main-container">
+    {% block content %} {% endblock %}
+</main>
+
+{{ include('footer.twig') }}
+
+<!-- Scripts -->
+<script src="{{ base_path }}/assets/js/core.min.js"></script>
+<script src="{{ base_path }}/assets/js/app.js"></script>
+<script src="{{ base_path }}/assets/js/script.js"></script>
+
+</body>
+
+</html>
