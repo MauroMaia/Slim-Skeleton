@@ -1,12 +1,13 @@
 version: '3.7'
 
 volumes:
-    logs:
+    libmariadb:
         driver: local
 
 services:
     slim:
         image: php:8-alpine
+        restart: always
         working_dir: /var/www
         command: php -S 0.0.0.0:8080 -t public
         environment:
@@ -15,4 +16,15 @@ services:
             - "8080:8080"
         volumes:
             - .:/var/www
-            - logs:/var/www/logs
+    db_mysql:
+        image: mariadb:latest
+        restart: always
+        environment:
+            MARIADB_ROOT_PASSWORD: "password"
+            MARIADB_DATABASE: "slim"
+            MARIADB_AUTO_UPGRADE: "true"
+        volumes:
+            - libmariadb:/var/lib/mysql
+            - ./schema:/docker-entrypoint-initdb.d
+        ports:
+            - "3306:3306"
