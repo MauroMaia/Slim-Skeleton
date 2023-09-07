@@ -17,3 +17,11 @@ defined('AUDIENCE') or define('AUDIENCE', [ISSUER]);
 defined('SECRET') or define('SECRET', 'very_secure_password_to_be_store_elsewhere');
 defined('EXPIRATION_TIME_SECONDS') or define('EXPIRATION_TIME_SECONDS', 2 * 60 * 60); // 2h
 defined('NOT_BEFORE_SECONDS') or define('NOT_BEFORE_SECONDS', 0);
+
+
+function rand_string( $length ) {
+
+    $chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    return substr(str_shuffle($chars),0,$length);
+
+}

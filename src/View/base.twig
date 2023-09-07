@@ -31,20 +31,27 @@
 <body>
 
 <!-- Preloader -->
-<div class="preloader">
-    <div class="spinner-dots">
-        <span class="dot1"></span>
-        <span class="dot2"></span>
-        <span class="dot3"></span>
+
+{% block preloader %}
+    <div class="preloader">
+        <div class="spinner-dots">
+            <span class="dot1"></span>
+            <span class="dot2"></span>
+            <span class="dot3"></span>
+        </div>
     </div>
-</div>
+{% endblock %}
 
 <!-- Sidebar -->
-{% include 'sidebar/aside.twig' %}
+{% block sidebar %}
+    {% include 'sidebar/aside.twig' %}
+{% endblock %}
 <!-- END Sidebar -->
 
 <!-- TopBar -->
-{% include 'topbar/main.twig' %}
+{% block topbar %}
+    {% include 'topbar/main.twig' %}
+{% endblock %}
 <!-- END TopBar -->
 <!-- Main container -->
 <main class="main-container">

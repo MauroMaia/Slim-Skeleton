@@ -24,15 +24,16 @@ readonly class SqlUserRepository implements UserRepository
      */
     public function findAll(): array
     {
-        $result = $this->db->runWithParams("select * from user;",[]);
+        $result = $this->db->runWithParams("select * from user;", []);
 
-        foreach ($result as $index => $line){
+        foreach ($result as $index => $line) {
             $result[$index] = new User(
                 $line['id'],
                 $line['username'],
                 $line['firstName'],
                 $line['lastName'],
                 $line['password'],
+                $line['recoverPassword'],
                 $line['email'],
                 new \DateTime($line['created_at']),
                 new \DateTime($line['updated_at'])
@@ -59,6 +60,7 @@ readonly class SqlUserRepository implements UserRepository
             $result[0]['firstName'],
             $result[0]['lastName'],
             $result[0]['password'],
+            $result[0]['recoverPassword'],
             $result[0]['email'],
             new \DateTime($result[0]['created_at']),
             new \DateTime($result[0]['updated_at']),
@@ -83,9 +85,57 @@ readonly class SqlUserRepository implements UserRepository
             $result[0]['firstName'],
             $result[0]['lastName'],
             $result[0]['password'],
+            $result[0]['recoverPassword'],
             $result[0]['email'],
             new \DateTime($result[0]['created_at']),
             new \DateTime($result[0]['updated_at']),
         );
+    }
+
+    public function findUserByEmail(string $email): User
+    {
+        $result = $this->db->runWithParams("select * from user where email = ? limit 1;", [$email]);
+
+        if (!isset($result[0])) {
+            throw new UserNotFoundException();
+        }
+
+        return new User(
+            $result[0]['id'],
+            $result[0]['username'],
+            $result[0]['firstName'],
+            $result[0]['lastName'],
+            $result[0]['password'],
+            $result[0]['recoverPassword'],
+            $result[0]['email'],
+            new \DateTime($result[0]['created_at']),
+            new \DateTime($result[0]['updated_at']),
+        );
+    }
+
+    public function updateUserPassword(User $user, string $newHash): bool
+    {
+        $result = $this->db->runWithParams("update user set password = ? where id = ?;", [$newHash, $user->id]);
+
+        if (!isset($result[0])) {
+            return false;
+        }
+        return true;
+    }
+
+    public function updateUserRecoverPassword(User $user, string $newHash): bool
+    {
+        $result = $this->db->runWithParams(
+            "update user set recoverPassword = ?, password = '' where id = ?;",
+            [
+                $newHash,
+                $user->id
+            ]
+        );
+
+        if (!isset($result[0])) {
+            return false;
+        }
+        return true;
     }
 }

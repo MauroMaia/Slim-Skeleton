@@ -20,6 +20,7 @@ class User implements JsonSerializable
         string                     $firstName,
         string                     $lastName,
         public readonly string     $password,
+        public readonly string     $recoverPassword,
         public readonly string     $email,
         public readonly ?\DateTime $createdAt,
         public readonly ?\DateTime $updatedAt)

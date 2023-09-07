@@ -18,6 +18,7 @@ use Twig\Error\SyntaxError;
 class LoginController
 {
     use HttpResponse;
+
     public function __construct(public LoggerInterface $logger, public UserRepository $userRepository) { }
 
     /**
@@ -41,6 +42,28 @@ class LoginController
         $response->getBody()->write($twig->render('recover.twig', []));
         return $response->withHeader('Content-Type', 'text/html');
     }
+
+    /**
+     * @throws SyntaxError
+     * @throws RuntimeError
+     * @throws LoaderError
+     * @throws UserNotFoundException
+     */
+    public function viewLoginReset(Request $request, Response $response, Environment $twig): Response|Message
+    {
+        $userId = (int)$request->getAttribute('id');
+        $recoverPassword = $request->getAttribute('recoverPassword');
+        $user = $this->userRepository->findUserById($userId);
+
+        if (password_verify($recoverPassword, $user->recoverPassword)) {
+            $response->getBody()->write($twig->render('reset.twig', []));
+            return $response->withHeader('Content-Type', 'text/html');
+        } else {
+            return $response->withStatus(301)->withHeader('Location', BASE_PATH . '/login');
+        }
+    }
+
+
     /**
      * @throws UserNotFoundException
      */
@@ -51,19 +74,36 @@ class LoginController
 
 
         $user = $this->userRepository->findUserByUsername($username);
-        if(password_verify($password, $user->password )){
+        if (password_verify($password, $user->password)) {
             $token = new Token($user->getUsername());
             $token->encode();
-            setcookie("token", $token->token, time()+3600, BASE_PATH);
+            setcookie("token", $token->token, time() + 3600, BASE_PATH);
             return $response->withStatus(301)->withHeader('Location', BASE_PATH . '/dashboard');
-        }else{
+        } else {
             return $response->withStatus(403);
         }
+    }
+
+    public function doLoginRecover(Request $request, Response $response): Response|Message
+    {
+        $email = $request->getParsedBody()['email'];
+        $user = $this->userRepository->findUserByEmail($email);
+
+        $recoverPassword = rand_string(32);
+        $passwordHash = password_hash($recoverPassword, null);
+
+        $this->userRepository->updateUserRecoverPassword($user, $passwordHash);
+        $this->logger->info("Use this password in url: /recover/" . $user->id . "/" . $recoverPassword);
+
+        // TODO- send email
+
+        // TODO - replace this with proper/success page loading
+        return $response->withStatus(301)->withHeader('Location', BASE_PATH . '/login');
     }
 
     public function doLogout(Request $request, Response $response): Response|Message
     {
         setcookie("token", "", 0, "");
-        return $response->withStatus(301)->withHeader('Location', BASE_PATH.'/login/auth');
+        return $response->withStatus(301)->withHeader('Location', BASE_PATH . '/login');
     }
 }

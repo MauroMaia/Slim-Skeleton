@@ -1,10 +1,12 @@
 {% extends "error/base.twig" %}
 
 {% block head %}
-    {{ parent() }}
 
     <meta name="keywords" content="error, 500">
     <title>Internal server error &mdash; TheAdmin</title>
+
+    {{ parent() }}
+
 {% endblock %}
 
 {% block content %}

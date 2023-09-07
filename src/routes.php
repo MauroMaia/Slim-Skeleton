@@ -36,9 +36,9 @@ return function (App $app) {
      * NO-AUTHENTICATION
      */
     $app->group('/login', function (RouteCollectorProxy $group) {
-        $group->get('/auth', [LoginController::class, 'viewLoginAuth'])->setName('viewLoginAuth')->add(Guard::class);
+        $group->get('', [LoginController::class, 'viewLoginAuth'])->setName('viewLoginAuth')->add(Guard::class);
         $group->get('/recover', [LoginController::class, 'viewLoginRecover'])->setName('viewLoginRecover')->add(Guard::class);
-        //$group->get('/reset/{id}/{recoverPassword}', [LoginController::class, 'getLoginPage'])->setName('viewLoginReset');
+        $group->get('/recover/{id}/{recoverPassword}', [LoginController::class, 'viewLoginReset'])->setName('viewLoginReset');
         //$group->post('/reset', [LoginController::class, 'getLoginPage'])->setName('doLoginReset');
     });
 
@@ -61,7 +61,7 @@ return function (App $app) {
      */
     $app->group('/api', function (RouteCollectorProxy $group) {
         $group->post('/login', [LoginController::class, 'doLoginValidate'])->setName('doLoginValidate');
-        $group->post('/login/reset', [LoginController::class, 'doLoginReset'])->setName('doLoginReset');
+        $group->post('/login/recover', [LoginController::class, 'doLoginRecover'])->setName('doLoginRecover');
     })->add(NoCacheMiddleware::class);
 
     /*

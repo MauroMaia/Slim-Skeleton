@@ -1,28 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.twig" %}
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="Responsive admin dashboard and web application ui kit. ">
-    <meta name="keywords" content="login, signin">
 
-    <title>Login &mdash; Slim</title>
+{% block head %}
 
-    <!-- Fonts -->
-    <link href="../../../external.html?link=https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,300i" rel="stylesheet">
+    <title>Recover &mdash; Slim</title>
 
-    <!-- Styles -->
-    <link href="../assets/css/core.min.css" rel="stylesheet">
-    <link href="../assets/css/app.css" rel="stylesheet">
-    <link href="../assets/css/style.css" rel="stylesheet">
+    {{ parent() }}
+{% endblock %}
 
-    <!-- Favicons -->
-    <link rel="apple-touch-icon" href="../assets/img/apple-touch-icon.png">
-    <link rel="icon" href="../assets/img/favicon.png">
-  </head>
+{% block preloader %} {% endblock %}
+{% block sidebar %} {% endblock %}
+{% block topbar %} {% endblock %}
 
-<body>
+{% block content %}
 
 
 <div class="row min-h-fullscreen center-vh p-20 m-0">
@@ -32,9 +22,9 @@
             <h5 class="text-uppercase">Recover password</h5>
             <br>
 
-            <form class="form-type-material" method="post" action="../api/login/reset">
+            <form class="form-type-material" method="post" action="api/login/recover">
                 <div class="form-group">
-                    <input type="text" class="form-control" id="email">
+                    <input type="text" class="form-control" id="email" name="email">
                     <label for="email">Email address</label>
                 </div>
 
@@ -47,18 +37,6 @@
         </div>
     </div>
 
-
-    {{ source('footer.twig') }}
 </div>
 
-
-
-
-<!-- Scripts -->
-<script src="../assets/js/core.min.js"></script>
-<script src="../assets/js/app.min.js"></script>
-<script src="../assets/js/script.min.js"></script>
-
-</body>
-
-</html>
+{% endblock %}

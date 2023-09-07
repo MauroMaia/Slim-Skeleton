@@ -1,36 +1,27 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.twig" %}
 
-<!-- Mirrored from thetheme.io/theadmin/page-extra/user-login-1.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 10 May 2022 21:01:04 GMT -->
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="Responsive admin dashboard and web application ui kit. ">
-    <meta name="keywords" content="login, signin">
+
+{% block head %}
 
     <title>Login &mdash; Slim</title>
 
-    <!-- Fonts -->
-    <link href="../../../external.html?link=https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,300i" rel="stylesheet">
+  {{ parent() }}
 
-    <!-- Styles -->
-    <link href="../assets/css/core.min.css" rel="stylesheet">
-    <link href="../assets/css/app.css" rel="stylesheet">
-    <link href="../assets/css/style.css" rel="stylesheet">
+{% endblock %}
 
-    <!-- Favicons -->
-    <link rel="apple-touch-icon" href="../assets/img/apple-touch-icon.png">
-    <link rel="icon" href="../assets/img/favicon.png">
-  </head>
+{% block preloader %} {% endblock %}
+{% block sidebar %} {% endblock %}
+{% block topbar %} {% endblock %}
 
-  <body>
+{% block content %}
+
     <div class="row min-h-fullscreen center-vh p-20 m-0">
       <div class="col-12">
         <div class="card card-shadowed px-50 py-30 w-400px mx-auto" style="max-width: 100%">
           <h5 class="text-uppercase">Sign in</h5>
           <br>
 
-          <form class="form-type-material" method="post" action="../api/login">
+          <form class="form-type-material" method="post" action="api/login">
             <div class="form-group">
               <input type="text" class="form-control" id="username" name="username">
               <label for="username">Username</label>
@@ -50,7 +41,7 @@
                 <label class="custom-control-label">Remember me</label>
               </div>
 
-              <a class="text-muted hover-primary fs-13 mt-2 mt-md-0" href="recover">Forgot password?</a>
+              <a class="text-muted hover-primary fs-13 mt-2 mt-md-0" href="login/recover">Forgot password?</a>
             </div>
 
             <div class="form-group">
@@ -69,15 +60,6 @@
         href="#">Sign up</a></p> -->
       </div>
 
-		{{ source('footer.twig') }}
-
     </div>
 
-
-    <!-- Scripts -->
-    <script src="../assets/js/core.min.js"></script>
-    <script src="../assets/js/app.js"></script>
-
-  </body>
-
-</html>
+{% endblock %}

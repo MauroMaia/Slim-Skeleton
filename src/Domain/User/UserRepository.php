@@ -26,4 +26,10 @@ interface UserRepository
      * @throws UserNotFoundException
      */
     public function findUserByUsername(string $username): User;
+
+    public function findUserByEmail(string $email): User;
+
+    public function updateUserPassword(User $user, string $newHash): bool;
+
+    public function updateUserRecoverPassword(User $user, string $newHash): bool;
 }
