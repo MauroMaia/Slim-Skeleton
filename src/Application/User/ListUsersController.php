@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Actions\User;
+namespace App\Application\User;
 
 use App\Application\Actions\HttpResponse;
 use App\Domain\User\UserNotFoundException;
 use App\Domain\User\UserRepository;
+use Psr\Log\LoggerInterface;
 use Slim\Psr7\Request;
 use Slim\Psr7\Response;
-use Psr\Log\LoggerInterface;
 
 class ListUsersController
 {

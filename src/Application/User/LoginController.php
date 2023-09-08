@@ -1,15 +1,16 @@
 <?php
 
-namespace App\Application\Actions\User;
+namespace App\Application\User;
 
-use App\Application\Actions\HttpResponse;
+use App\Application\HttpResponse;
 use App\Domain\User\UserNotFoundException;
 use App\Domain\User\UserRepository;
+use App\Infrastructure\EmailHandler;
 use App\Infrastructure\Slim\Authentication\Token;
+use Psr\Log\LoggerInterface;
 use Slim\Psr7\Message;
 use Slim\Psr7\Request;
 use Slim\Psr7\Response;
-use Psr\Log\LoggerInterface;
 use Twig\Environment;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
@@ -56,7 +57,7 @@ class LoginController
         $user = $this->userRepository->findUserById($userId);
 
         if (password_verify($recoverPassword, $user->recoverPassword)) {
-            $response->getBody()->write($twig->render('reset.twig', []));
+            $response->getBody()->write($twig->render('reset-password.twig', []));
             return $response->withHeader('Content-Type', 'text/html');
         } else {
             return $response->withStatus(301)->withHeader('Location', BASE_PATH . '/login');
@@ -84,7 +85,12 @@ class LoginController
         }
     }
 
-    public function doLoginRecover(Request $request, Response $response): Response|Message
+    /**
+     * @throws SyntaxError
+     * @throws RuntimeError
+     * @throws LoaderError
+     */
+    public function doLoginRecover(Request $request, Response $response, Environment $twig): Response|Message
     {
         $email = $request->getParsedBody()['email'];
         $user = $this->userRepository->findUserByEmail($email);
@@ -95,7 +101,12 @@ class LoginController
         $this->userRepository->updateUserRecoverPassword($user, $passwordHash);
         $this->logger->info("Use this password in url: /recover/" . $user->id . "/" . $recoverPassword);
 
-        // TODO- send email
+        EmailHandler::SendRecoverEmail(
+            $user,
+            $request->getUri()->getScheme() . '://' . $request->getUri()->getHost()
+            . BASE_PATH . "/login/recover/" . $user->id . "/" . $recoverPassword,
+            $twig
+        );
 
         // TODO - replace this with proper/success page loading
         return $response->withStatus(301)->withHeader('Location', BASE_PATH . '/login');

@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use App\Application\Actions\User\ListUsersController;
-use App\Application\Actions\User\LoginController;
+use App\Application\User\ListUsersController;
+use App\Application\User\LoginController;
 use App\Infrastructure\Slim\Middleware\JWTAuthenticationHandler;
 use App\Infrastructure\Slim\Middleware\NoCacheMiddleware;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -32,6 +32,10 @@ return function (App $app) {
         return $response->withHeader('Content-Type', 'text/html');
     });
 
+    $app->get('/', function (Request $request, Response $response){
+        return $response->withStatus(301)->withHeader('Location', BASE_PATH . '/login');
+    });
+
     /*
      * NO-AUTHENTICATION
      */
@@ -39,7 +43,7 @@ return function (App $app) {
         $group->get('', [LoginController::class, 'viewLoginAuth'])->setName('viewLoginAuth')->add(Guard::class);
         $group->get('/recover', [LoginController::class, 'viewLoginRecover'])->setName('viewLoginRecover')->add(Guard::class);
         $group->get('/recover/{id}/{recoverPassword}', [LoginController::class, 'viewLoginReset'])->setName('viewLoginReset');
-        //$group->post('/reset', [LoginController::class, 'getLoginPage'])->setName('doLoginReset');
+        //$group->post('/signup', [LoginController::class, 'getSignupPage'])->setName('doLoginReset');
     });
 
     $app->group('/logout', function (RouteCollectorProxy $group) {
@@ -62,6 +66,7 @@ return function (App $app) {
     $app->group('/api', function (RouteCollectorProxy $group) {
         $group->post('/login', [LoginController::class, 'doLoginValidate'])->setName('doLoginValidate');
         $group->post('/login/recover', [LoginController::class, 'doLoginRecover'])->setName('doLoginRecover');
+        $group->post('/login/reset', [LoginController::class, 'doLoginReset'])->setName('doLoginReset');
     })->add(NoCacheMiddleware::class);
 
     /*

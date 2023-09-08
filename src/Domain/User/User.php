@@ -35,6 +35,15 @@ class User implements JsonSerializable
         return $this->username;
     }
 
+    public function getFirstName(): string
+    {
+        return $this->firstName;
+    }
+    public function getLastName(): string
+    {
+        return $this->lastName;
+    }
+
 
     #[\ReturnTypeWillChange]
     public function jsonSerialize(): array

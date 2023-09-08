@@ -6,6 +6,7 @@ use App\Infrastructure\Slim\Handlers\HttpErrorHandler;
 use App\Infrastructure\Slim\Handlers\ShutdownHandler;
 use App\Infrastructure\Settings\SettingsInterface;
 use DI\Bridge\Slim\Bridge;
+use Psr\Log\LoggerInterface;
 use Slim\Factory\ServerRequestCreatorFactory;
 
 require __DIR__ . '/vendor/autoload.php';
@@ -52,7 +53,7 @@ $request = $serverRequestCreator->createServerRequestFromGlobals();
 
 // Create Error Handler
 $responseFactory = $app->getResponseFactory();
-$errorHandler = new HttpErrorHandler($callableResolver, $responseFactory);
+$errorHandler = new HttpErrorHandler($callableResolver, $responseFactory,$app->getContainer()->get(LoggerInterface::class));
 
 // Create Shutdown Handler
 $shutdownHandler = new ShutdownHandler($request, $errorHandler, $displayErrorDetails);

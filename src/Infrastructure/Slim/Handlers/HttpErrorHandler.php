@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Slim\Handlers;
 
-use App\Application\Actions\ActionError;
-use App\Application\Actions\ActionPayload;
+use App\Application\ActionError;
+use App\Application\ActionPayload;
 use Psr\Http\Message\ResponseInterface as Response;
 use Slim\Exception\HttpBadRequestException;
 use Slim\Exception\HttpException;
@@ -25,6 +25,9 @@ class HttpErrorHandler extends SlimErrorHandler
     protected function respond(): Response
     {
         $exception = $this->exception;
+
+        $this->logger->warning("Unhandled error",['exceptionMessage'=>$exception->getMessage()]);
+
         $statusCode = 500;
         $error = new ActionError(
             ActionError::SERVER_ERROR,
