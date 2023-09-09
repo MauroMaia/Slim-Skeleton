@@ -1,8 +1,24 @@
 <?php
 
+use Monolog\Level;
+
 defined('BASE_PATH')        or define('BASE_PATH', '/slim-skeleton');
 defined('APP_NAME')         or define('APP_NAME', 'slim-skeleton');
 defined('APP_DESCRIPTION')  or define('APP_DESCRIPTION', 'slim-skeleton');
+
+
+// SLIM
+// Should be set to false in production
+defined('DISPLAY_ERRORS')   or define('DISPLAY_ERRORS', true);
+
+// logger
+defined('LOGGER_REGISTER_ERRORS')           or define('LOGGER_REGISTER_ERRORS', true);
+defined('LOGGER_REGISTER_ERRORS_DETAILS')   or define('LOGGER_REGISTER_ERRORS_DETAILS', true);
+defined('LOGGER_INTERNAL_CONFIGS')          or define('LOGGER_INTERNAL_CONFIGS', [
+    'name' => str_replace(' ','',APP_NAME),
+    'path' => isset($_ENV['docker']) ? 'php://stdout' : __DIR__ . '/../logs/app.log',
+    'level' => Level::Debug,
+]);
 
 // db
 defined('DATABASE_HOST')        or define('DATABASE_HOST', '127.0.0.1');

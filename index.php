@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 use App\Infrastructure\Slim\Handlers\HttpErrorHandler;
 use App\Infrastructure\Slim\Handlers\ShutdownHandler;
-use App\Infrastructure\Settings\SettingsInterface;
 use DI\Bridge\Slim\Bridge;
 use Psr\Log\LoggerInterface;
 use Slim\Factory\ServerRequestCreatorFactory;
@@ -40,13 +39,6 @@ $middleware($app);
 $routes = require __DIR__ . '/src/routes.php';
 $routes($app);
 
-/** @var SettingsInterface $settings */
-$settings = $container->get(SettingsInterface::class);
-
-$displayErrorDetails = $settings->get('displayErrorDetails');
-$logError = $settings->get('logError');
-$logErrorDetails = $settings->get('logErrorDetails');
-
 // Create Request object from globals
 $serverRequestCreator = ServerRequestCreatorFactory::create();
 $request = $serverRequestCreator->createServerRequestFromGlobals();
@@ -56,7 +48,7 @@ $responseFactory = $app->getResponseFactory();
 $errorHandler = new HttpErrorHandler($callableResolver, $responseFactory,$app->getContainer()->get(LoggerInterface::class));
 
 // Create Shutdown Handler
-$shutdownHandler = new ShutdownHandler($request, $errorHandler, $displayErrorDetails);
+$shutdownHandler = new ShutdownHandler($request, $errorHandler, DISPLAY_ERRORS);
 register_shutdown_function($shutdownHandler);
 
 // Add Routing Middleware
@@ -67,7 +59,7 @@ $app->addBodyParsingMiddleware();
 $app->setBasePath(BASE_PATH);
 
 // Add Error Middleware
-$errorMiddleware = $app->addErrorMiddleware($displayErrorDetails, $logError, $logErrorDetails);
+$errorMiddleware = $app->addErrorMiddleware(DISPLAY_ERRORS, LOGGER_REGISTER_ERRORS, LOGGER_REGISTER_ERRORS_DETAILS);
 $errorMiddleware->setDefaultErrorHandler($errorHandler);
 
 // Run App

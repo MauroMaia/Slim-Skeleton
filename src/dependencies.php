@@ -3,15 +3,11 @@
 declare(strict_types=1);
 
 use App\Infrastructure\Persistence\DatabaseConnection;
-use App\Infrastructure\Settings\Settings;
-use App\Infrastructure\Settings\SettingsInterface;
 use App\Infrastructure\Slim\CsrfExtension;
 use DI\ContainerBuilder;
 use Monolog\Handler\StreamHandler;
-use Monolog\Level;
 use Monolog\Logger;
 use Monolog\Processor\UidProcessor;
-use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use Slim\App;
 use Slim\Csrf\Guard;
@@ -23,24 +19,9 @@ $containerBuilder = new ContainerBuilder();
 
 $containerBuilder->addDefinitions(
     [
-        SettingsInterface::class => function () {
-            return new Settings(
-                [
-                    'displayErrorDetails' => true, // Should be set to false in production
-                    'logError' => false,
-                    'logErrorDetails' => false,
-                    'logger' => [
-                        'name' => 'slim-app',
-                        'path' => isset($_ENV['docker']) ? 'php://stdout' : __DIR__ . '/../logs/app.log',
-                        'level' => Level::Debug,
-                    ],
-                ]);
-        },
+        LoggerInterface::class => function () {
 
-        LoggerInterface::class => function (ContainerInterface $c) {
-            $settings = $c->get(SettingsInterface::class);
-
-            $loggerSettings = $settings->get('logger');
+            $loggerSettings = LOGGER_INTERNAL_CONFIGS;
             $logger = new Logger($loggerSettings['name']);
 
             $processor = new UidProcessor();

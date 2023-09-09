@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Application\User;
 
-use App\Application\Actions\HttpResponse;
 use App\Domain\User\UserNotFoundException;
 use App\Domain\User\UserRepository;
+use App\Infrastructure\Slim\HttpResponse;
 use Psr\Log\LoggerInterface;
 use Slim\Psr7\Request;
 use Slim\Psr7\Response;
