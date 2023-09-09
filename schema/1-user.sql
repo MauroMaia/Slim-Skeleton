@@ -16,6 +16,10 @@ insert into slim.user(username, firstName, lastName, email, password)
 VALUES ('admin', 'FirstName', 'LastName', 'admin@exemple.com',
 		'$2y$10$WwHzl9gP1IvZ3lQvgFLaIenm41U2pUZNhGs9dyz4Uo6/gJ2NYUoXK');
 
+insert into slim.user(username, firstName, lastName, email, password)
+VALUES ('mauro.maia', 'Mauro', 'Maia', 'maurofilipemaia@gmail.com',
+		'$2y$10$WwHzl9gP1IvZ3lQvgFLaIenm41U2pUZNhGs9dyz4Uo6/gJ2NYUoXK');
+
 create table if not exists slim.user_permissions (
 	permission         text                                 not null,
 	userid     bigint                               null,
@@ -26,5 +30,5 @@ create table if not exists slim.user_permissions (
 );
 
 insert into slim.user_permissions(permission, userid)
-values ('ADMIN', 1);
+values ('ADMIN', 1), ('ADMIN', 2);
 

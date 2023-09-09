@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Application;
+namespace App\Infrastructure\Slim;
 
+use App\Application\ActionPayload;
 use Slim\Psr7\Response;
 
 trait HttpResponse

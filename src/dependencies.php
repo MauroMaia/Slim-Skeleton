@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
+use App\Infrastructure\Persistence\DatabaseConnection;
 use App\Infrastructure\Settings\Settings;
 use App\Infrastructure\Settings\SettingsInterface;
-use App\Infrastructure\Persistence\DatabaseConnection;
 use App\Infrastructure\Slim\CsrfExtension;
 use DI\ContainerBuilder;
 use Monolog\Handler\StreamHandler;
@@ -15,6 +15,7 @@ use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use Slim\App;
 use Slim\Csrf\Guard;
+use Slim\Interfaces\RouteParserInterface;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 
@@ -35,6 +36,7 @@ $containerBuilder->addDefinitions(
                     ],
                 ]);
         },
+
         LoggerInterface::class => function (ContainerInterface $c) {
             $settings = $c->get(SettingsInterface::class);
 
@@ -44,8 +46,7 @@ $containerBuilder->addDefinitions(
             $processor = new UidProcessor();
             $logger->pushProcessor($processor);
 
-            $handler = new StreamHandler($loggerSettings['path'],
-                $loggerSettings['level']);
+            $handler = new StreamHandler($loggerSettings['path'], $loggerSettings['level']);
             $logger->pushHandler($handler);
 
             return $logger;
@@ -58,8 +59,8 @@ $containerBuilder->addDefinitions(
             //$twig->addGlobal('project_owner_url', PROJECT_OWNER_URL);
             //$twig->addGlobal('project_owner_name', PROJECT_OWNER_NAME);
             $twig->addGlobal('base_path', BASE_PATH);
-            $twig->addGlobal('app_name', BASE_PATH);
-            //$twig->addGlobal('app_description', APP_DESCRIPTION);
+            $twig->addGlobal('app_name', APP_NAME);
+            $twig->addGlobal('app_description', APP_DESCRIPTION);
 
             $twig->addExtension(new CsrfExtension($guard));
 
@@ -69,6 +70,8 @@ $containerBuilder->addDefinitions(
         DatabaseConnection::class => fn(LoggerInterface $logger) => new DatabaseConnection($logger),
 
         Guard::class => fn(App $app) => new Guard($app->getResponseFactory(), persistentTokenMode: true),
+
+        RouteParserInterface::class => fn(App $app) => $app->getRouteCollector()->getRouteParser()
     ]);
 
 return $containerBuilder;

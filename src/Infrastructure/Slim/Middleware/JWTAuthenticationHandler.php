@@ -6,13 +6,14 @@ use App\Infrastructure\Slim\Authentication\Token;
 use Firebase\JWT\SignatureInvalidException;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use Psr\Log\LoggerInterface;
+use Slim\Interfaces\RouteParserInterface;
 use Slim\Psr7\Request;
 use Slim\Psr7\Response;
 
 readonly class JWTAuthenticationHandler
 {
 
-    public function __construct(private LoggerInterface $logger) { }
+    public function __construct(private LoggerInterface $logger, private RouteParserInterface $router) { }
 
     /**
      *
@@ -32,7 +33,7 @@ readonly class JWTAuthenticationHandler
         } catch (SignatureInvalidException|\TypeError $ignored) {
             $this->logger->warning("Invalid user authentication", ['exception-message' => $ignored->getMessage()]);
             $response = new Response();
-            return $response->withStatus(301)->withHeader('Location', BASE_PATH . '/login');
+            return $response->withStatus(301)->withHeader('Location', $this->router->urlFor('viewLoginAuth'));
         }
 
         return $handler->handle($request);

@@ -10,6 +10,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\App;
 use Slim\Csrf\Guard;
+use Slim\Interfaces\RouteParserInterface;
 use Slim\Routing\RouteCollectorProxy;
 use Twig\Environment;
 
@@ -32,19 +33,28 @@ return function (App $app) {
         return $response->withHeader('Content-Type', 'text/html');
     });
 
-    $app->get('/', function (Request $request, Response $response){
-        return $response->withStatus(301)->withHeader('Location', BASE_PATH . '/login');
+    $app->get('/', function (Request $request, Response $response, RouteParserInterface $router){
+        return $response->withStatus(301)
+            ->withHeader('Location', $router->urlFor('viewLoginAuth'));
     });
 
     /*
      * NO-AUTHENTICATION
      */
-    $app->group('/login', function (RouteCollectorProxy $group) {
-        $group->get('', [LoginController::class, 'viewLoginAuth'])->setName('viewLoginAuth')->add(Guard::class);
-        $group->get('/recover', [LoginController::class, 'viewLoginRecover'])->setName('viewLoginRecover')->add(Guard::class);
-        $group->get('/recover/{id}/{recoverPassword}', [LoginController::class, 'viewLoginReset'])->setName('viewLoginReset');
-        //$group->post('/signup', [LoginController::class, 'getSignupPage'])->setName('doLoginReset');
-    });
+    $app->group('/login', function (RouteCollectorProxy $group)
+    {
+        $group->get('', [LoginController::class, 'viewLoginAuth'])
+            ->setName('viewLoginAuth');
+
+        $group->get('/recover', [LoginController::class, 'viewLoginRecover'])
+            ->setName('viewLoginRecover');
+
+        $group->get('/recover/{id}/{recoverPassword}', [LoginController::class, 'viewLoginReset'])
+            ->setName('viewLoginReset');
+
+        //$group->post('/signup', [LoginController::class, 'getSignupPage'])
+        //      ->setName('doLoginReset');
+    })->add(Guard::class);
 
     $app->group('/logout', function (RouteCollectorProxy $group) {
         $group->get('', [LoginController::class, 'doLogout'])->setName('doLogout');
@@ -56,7 +66,8 @@ return function (App $app) {
         $group->get('/dashboard', function (Request $request, Response $response, Environment $twig) {
             $response->getBody()->write($twig->render('main.twig'));
             return $response->withHeader('Content-Type', 'text/html');
-        })->add(Guard::class)
+        })->setName('dashboard')
+            ->add(Guard::class)
             ->add(JWTAuthenticationHandler::class);
     });
 

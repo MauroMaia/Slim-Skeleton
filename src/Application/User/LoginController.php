@@ -2,12 +2,13 @@
 
 namespace App\Application\User;
 
-use App\Application\HttpResponse;
 use App\Domain\User\UserNotFoundException;
 use App\Domain\User\UserRepository;
 use App\Infrastructure\EmailHandler;
 use App\Infrastructure\Slim\Authentication\Token;
+use App\Infrastructure\Slim\HttpResponse;
 use Psr\Log\LoggerInterface;
+use Slim\Interfaces\RouteParserInterface;
 use Slim\Psr7\Message;
 use Slim\Psr7\Request;
 use Slim\Psr7\Response;
@@ -56,41 +57,34 @@ class LoginController
         $recoverPassword = $request->getAttribute('recoverPassword');
         $user = $this->userRepository->findUserById($userId);
 
-        if (password_verify($recoverPassword, $user->recoverPassword)) {
-            $response->getBody()->write($twig->render('reset-password.twig', []));
-            return $response->withHeader('Content-Type', 'text/html');
-        } else {
-            return $response->withStatus(301)->withHeader('Location', BASE_PATH . '/login');
-        }
-    }
+        // TODO - replace this with proper/success page loading
+        if(empty($user->recoverPassword) || !password_verify($recoverPassword,$user->recoverPassword)) die("Invalid url");
 
+        // Set a new recover password to prevent replay attack
+        $recoverPassword = rand_string(32);
+        $passwordHash = password_hash($recoverPassword, null);
+        $this->userRepository->updateUserRecoverPassword($user, $passwordHash);
 
-    /**
-     * @throws UserNotFoundException
-     */
-    public function doLoginValidate(Request $request, Response $response)
-    {
-        $username = $request->getParsedBody()['username'];
-        $password = $request->getParsedBody()['password'];
-
-
-        $user = $this->userRepository->findUserByUsername($username);
-        if (password_verify($password, $user->password)) {
-            $token = new Token($user->getUsername());
-            $token->encode();
-            setcookie("token", $token->token, time() + 3600, BASE_PATH);
-            return $response->withStatus(301)->withHeader('Location', BASE_PATH . '/dashboard');
-        } else {
-            return $response->withStatus(403);
-        }
+        $response->getBody()->write($twig->render('reset-password.twig', [
+            'userId' => $user->id,
+            'recoverHash' => $recoverPassword
+        ]));
+        return $response->withHeader('Content-Type', 'text/html');
     }
 
     /**
-     * @throws SyntaxError
-     * @throws RuntimeError
+     * @param Request $request
+     * @param Response $response
+     * @param Environment $twig
+     * @param RouteParserInterface $router
+     *
+     * @return Response|Message
+     *
      * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
      */
-    public function doLoginRecover(Request $request, Response $response, Environment $twig): Response|Message
+    public function doLoginRecover(Request $request, Response $response, Environment $twig, RouteParserInterface $router): Response|Message
     {
         $email = $request->getParsedBody()['email'];
         $user = $this->userRepository->findUserByEmail($email);
@@ -103,18 +97,59 @@ class LoginController
 
         EmailHandler::SendRecoverEmail(
             $user,
-            $request->getUri()->getScheme() . '://' . $request->getUri()->getHost()
-            . BASE_PATH . "/login/recover/" . $user->id . "/" . $recoverPassword,
+            $router->fullUrlFor($request->getUri(),'viewLoginReset',['id'=>$user->id,'recoverPassword'=>$recoverPassword]),
             $twig
         );
 
         // TODO - replace this with proper/success page loading
-        return $response->withStatus(301)->withHeader('Location', BASE_PATH . '/login');
+        return $response->withStatus(301)->withHeader('Location', $router->urlFor('viewLoginAuth'));
     }
 
-    public function doLogout(Request $request, Response $response): Response|Message
+    /**
+     * @throws UserNotFoundException
+     */
+    public function doLoginReset(Request $request, Response $response, RouteParserInterface $router): Response|Message
+    {
+        $password = $request->getParsedBody()['password'];
+        $userId = $request->getParsedBody()['code'];
+        $recoverPassword = $request->getParsedBody()['recoverHash'];
+
+        $user = $this->userRepository->findUserById($userId);
+
+        if (password_verify($recoverPassword, $user->recoverPassword)) {
+
+            $passwordHash = password_hash($password, null);
+
+            $this->userRepository->updateUserPassword($user, $passwordHash);
+
+            return $response->withStatus(301)->withHeader('Location', $router->urlFor('viewLoginAuth'));
+        } else {
+            return $response->withStatus(403);
+        }
+    }
+
+    /**
+     * @throws UserNotFoundException
+     */
+    public function doLoginValidate(Request $request, Response $response, RouteParserInterface $router)
+    {
+        $username = $request->getParsedBody()['username'];
+        $password = $request->getParsedBody()['password'];
+
+        $user = $this->userRepository->findUserByUsername($username);
+        if (password_verify($password, $user->password)) {
+            $token = new Token($user->getUsername());
+            $token->encode();
+            setcookie("token", $token->token, time() + 3600, BASE_PATH);
+            return $response->withStatus(301)->withHeader('Location', $router->urlFor('dashboard'));
+        } else {
+            return $response->withStatus(403);
+        }
+    }
+
+    public function doLogout(Request $request, Response $response, RouteParserInterface $router): Response|Message
     {
         setcookie("token", "", 0, "");
-        return $response->withStatus(301)->withHeader('Location', BASE_PATH . '/login');
+        return $response->withStatus(301)->withHeader('Location', $router->urlFor('viewLoginAuth'));
     }
 }
