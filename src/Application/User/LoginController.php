@@ -57,8 +57,14 @@ class LoginController
         $recoverPassword = $request->getAttribute('recoverPassword');
         $user = $this->userRepository->findUserById($userId);
 
-        // TODO - replace this with proper/success page loading
-        if(empty($user->recoverPassword) || !password_verify($recoverPassword,$user->recoverPassword)) die("Invalid url");
+        if(empty($user->recoverPassword) || !password_verify($recoverPassword,$user->recoverPassword)) {
+            $response->getBody()->write($twig->render('error/flow-end.twig', [
+                'title'=>'Invalid URL',
+                'subtitle'=>'This link it\'s no longer valid',
+                'lead'=>'Please try again.'
+            ]));
+            return $response->withHeader('Content-Type', 'text/html');
+        }
 
         // Set a new recover password to prevent replay attack
         $recoverPassword = rand_string(32);
@@ -101,8 +107,12 @@ class LoginController
             $twig
         );
 
-        // TODO - replace this with proper/success page loading
-        return $response->withStatus(301)->withHeader('Location', $router->urlFor('viewLoginAuth'));
+        $response->getBody()->write($twig->render('error/flow-end.twig', [
+            'title'=>'Email Sent',
+            'subtitle'=>'A recover email was sent to your email account',
+            'lead'=>'In case off any issue contact the support.'
+        ]));
+        return $response->withHeader('Content-Type', 'text/html');
     }
 
     /**
