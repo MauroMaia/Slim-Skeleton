@@ -1,3 +1,6 @@
+-- drop table user_permissions;
+-- drop table user;
+
 create table if not exists user
 (
     id              bigint auto_increment primary key,
@@ -7,15 +10,21 @@ create table if not exists user
     email           text                                 not null,
     password        text                                 not null comment 'Password must be encrypted before',
     recoverPassword text     default ''                  not null comment 'Password must be encrypted before',
+    jobTitle		text     default ''                  not null,
     created_at      datetime default current_timestamp() not null,
     updated_at      datetime default current_timestamp() not null on update current_timestamp(),
     constraint User_email_pk unique (email) using hash,
     constraint User_username_pk unique (username) using hash
 );
 
-insert into user(username, firstName, lastName, email, password)
-VALUES ('admin', 'FirstName', 'LastName', 'admin@exemple.com',
-        '$2y$10$WwHzl9gP1IvZ3lQvgFLaIenm41U2pUZNhGs9dyz4Uo6/gJ2NYUoXK');
+create index user_email_index on user(email);
+
+create index user_username_index on user(username);
+
+insert into user(username, firstName, lastName, email, password, jobTitle)
+VALUES ('admin', 'Admin', 'God', 'admin@exemple.com',
+		'$2y$10$WwHzl9gP1IvZ3lQvgFLaIenm41U2pUZNhGs9dyz4Uo6/gJ2NYUoXK',
+		'God (at least for this site)');
 
 create table if not exists user_permissions
 (

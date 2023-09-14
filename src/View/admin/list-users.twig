@@ -1,0 +1,56 @@
+{% extends "base.twig" %}
+
+
+{% block head %}
+
+    <title>Add User &mdash; Slim</title>
+
+    {{ parent() }}
+{% endblock %}
+
+
+{% block content %}
+    <div class="main-content">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <h5 class="card-title"><strong>User list</strong></h5>
+
+                    <div class="media-list media-list-hover media-list-divided scrollable" style="height: 345px">
+
+                        {% for user in userList %}
+                            <div class="media media-single">
+                                <a href="#">
+                                    <img class="avatar" src="../assets/img/avatar/1.jpg" alt="...">
+                                </a>
+
+                                <div class="media-body">
+                                    <h6><a href="#">{{ user.firstName }} {{ user.lastName }}</a></h6>
+                                    <small class="text-fader">{{ user.jobTitle }}</small>
+                                </div>
+
+                                <div class="media-right">
+                                    <a class="btn btn-sm btn-bold btn-round btn-success w-100px"
+                                       href="app/admin/users/{{ user.id }}">Edit</a>
+
+                                    {%  if user.id != 1 %}
+                                        <a class="btn btn-sm btn-bold btn-round btn-outline btn-danger w-100px"
+                                            onclick="alert('Delete User {{ user.id }} : {{ user.firstName }} {{ user.lastName }} ?')"
+                                            >Delete</a>
+                                    {%  endif %}
+                                </div>
+                            </div>
+                        {% else %}
+                            <div>
+                                No users stored.
+                            </div>
+                        {% endfor %}
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+{% endblock %}

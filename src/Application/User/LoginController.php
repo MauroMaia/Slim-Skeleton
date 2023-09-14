@@ -30,7 +30,7 @@ class LoginController
      */
     public function viewLoginAuth(Request $request, Response $response, Environment $twig): Response|Message
     {
-        $response->getBody()->write($twig->render('login.twig', []));
+        $response->getBody()->write($twig->render('login/sign-in.twig', []));
         return $response->withHeader('Content-Type', 'text/html');
     }
 
@@ -41,7 +41,7 @@ class LoginController
      */
     public function viewLoginRecover(Request $request, Response $response, Environment $twig): Response|Message
     {
-        $response->getBody()->write($twig->render('recover.twig', []));
+        $response->getBody()->write($twig->render('login/recover.twig', []));
         return $response->withHeader('Content-Type', 'text/html');
     }
 
@@ -71,7 +71,7 @@ class LoginController
         $passwordHash = password_hash($recoverPassword, null);
         $this->userRepository->updateUserRecoverPassword($user, $passwordHash);
 
-        $response->getBody()->write($twig->render('reset-password.twig', [
+        $response->getBody()->write($twig->render('login/reset-password.twig', [
             'userId' => $user->id,
             'recoverHash' => $recoverPassword
         ]));
@@ -151,7 +151,7 @@ class LoginController
             $token = new Token($user->getUsername());
             $token->encode();
             setcookie("token", $token->token, time() + 3600, empty(BASE_PATH) ? '/' : BASE_PATH);
-            return $response->withStatus(301)->withHeader('Location', $router->urlFor('dashboard'));
+            return $response->withStatus(301)->withHeader('Location', $router->urlFor('home'));
         } else {
             $this->logger->warning("Invalid login user password");
             return $response->withStatus(403);

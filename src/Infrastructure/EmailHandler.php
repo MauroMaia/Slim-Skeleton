@@ -61,7 +61,7 @@ class EmailHandler
     public static function SendRecoverEmail(User $to, string $url, Environment $twig): void
     {
         $handler = new EmailHandler();
-        $handler->withHTMLBody($twig->render('reset-password-email.twig', ['url' => $url]));
+        $handler->withHTMLBody($twig->render('login/reset-password-email.twig', ['url' => $url]));
         try {
             $handler->sendSingleUser($to, 'Slim -skeleton | Recover Password');
         } catch (\Exception $exception) {

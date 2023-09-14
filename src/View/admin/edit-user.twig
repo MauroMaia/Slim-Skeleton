@@ -1,0 +1,95 @@
+{% extends "base.twig" %}
+
+
+{% block head %}
+
+    <title>Add User &mdash; Slim</title>
+
+    {{ parent() }}
+{% endblock %}
+
+
+{% block content %}
+
+    <div class="main-content">
+        <div class="row">
+            <div class="col-12">
+                <form class="card">
+                    <h4 class="card-title"><strong>Account</strong></h4>
+
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h5 class="text-light fw-400">Account Information</h5>
+                                <br>
+
+                                <div class="row">
+                                    <div class="form-group col-md-6">
+                                        <label class="text-fader">First name</label>
+                                        <input class="form-control" type="text" value="{{ user.firstName }}">
+                                    </div>
+
+                                    <div class="form-group col-md-6">
+                                        <label class="text-fader">Last name</label>
+                                        <input class="form-control" type="text" value="{{ user.LastName }}">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-md-6">
+                                        <label class="text-fader">Job Title</label>
+                                        <input class="form-control" type="text" value="{{ user.jobTitle }}">
+                                    </div>
+
+
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="text-fader">Email</label>
+                                    <input class="form-control" type="email" value="{{ user.email }}">
+                                </div>
+
+                                <br>
+
+                                <button class="btn btn-block btn-primary">Save Changes</button>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <form class="card">
+                    <h4 class="card-title"><strong>Change Password</strong></h4>
+
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12">
+
+                                <div class="form-group">
+                                    <label class="text-fader">New password</label>
+                                    <input class="form-control" type="password">
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="text-fader">Confirm new password</label>
+                                    <input class="form-control" type="password">
+                                </div>
+
+                                <br>
+
+                                <button class="btn btn-block btn-primary">Save Changes</button>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
