@@ -150,9 +150,10 @@ class LoginController
         if (password_verify($password, $user->password)) {
             $token = new Token($user->getUsername());
             $token->encode();
-            setcookie("token", $token->token, time() + 3600, BASE_PATH);
+            setcookie("token", $token->token, time() + 3600, empty(BASE_PATH) ? '/' : BASE_PATH);
             return $response->withStatus(301)->withHeader('Location', $router->urlFor('dashboard'));
         } else {
+            $this->logger->warning("Invalid login user password");
             return $response->withStatus(403);
         }
     }
@@ -163,3 +164,4 @@ class LoginController
         return $response->withStatus(301)->withHeader('Location', $router->urlFor('viewLoginAuth'));
     }
 }
+

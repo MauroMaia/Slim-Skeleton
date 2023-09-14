@@ -2,7 +2,7 @@
 
 use Monolog\Level;
 
-defined('BASE_PATH')        or define('BASE_PATH', '/slim-skeleton');
+defined('BASE_PATH')        or define('BASE_PATH', '');
 defined('APP_NAME')         or define('APP_NAME', 'slim-skeleton');
 defined('APP_DESCRIPTION')  or define('APP_DESCRIPTION', 'slim-skeleton');
 
@@ -37,6 +37,7 @@ defined('EXPIRATION_TIME_SECONDS')  or define('EXPIRATION_TIME_SECONDS', 2 * 60 
 defined('NOT_BEFORE_SECONDS')       or define('NOT_BEFORE_SECONDS', 0);
 
 // PHP MAILER
+defined('MAIL_ENABLE')          or define('MAIL_ENABLE', true); // TODO - set this up
 defined('MAIL_FROM')            or define('MAIL_FROM', '');
 defined('MAIL_FROM_PASSWORD')   or define('MAIL_FROM_PASSWORD', '');
 defined('MAIL_SERVER')          or define('MAIL_SERVER', '');
