@@ -16,7 +16,7 @@ defined('LOGGER_REGISTER_ERRORS')           or define('LOGGER_REGISTER_ERRORS', 
 defined('LOGGER_REGISTER_ERRORS_DETAILS')   or define('LOGGER_REGISTER_ERRORS_DETAILS', true);
 defined('LOGGER_INTERNAL_CONFIGS')          or define('LOGGER_INTERNAL_CONFIGS', [
     'name' => str_replace(' ','',APP_NAME),
-    'path' => isset($_ENV['docker']) ? 'php://stdout' : __DIR__ . '/../logs/app.log',
+    'path' => isset($_ENV['docker']) ? 'php://stdout' : __DIR__ . '/logs/app.log',
     'level' => Level::Debug,
 ]);
 
