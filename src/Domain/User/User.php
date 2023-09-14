@@ -22,6 +22,7 @@ class User implements JsonSerializable
         public readonly string     $password,
         public readonly string|null     $recoverPassword,
         public readonly string     $email,
+        public readonly string     $jobTitle,
         public readonly ?\DateTime $createdAt,
         public readonly ?\DateTime $updatedAt)
     {

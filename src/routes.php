@@ -2,7 +2,8 @@
 
 declare(strict_types=1);
 
-use App\Application\User\ListUsersController;
+use App\Application\Admin\AdminController;
+use App\Application\User\UserController;
 use App\Application\User\LoginController;
 use App\Infrastructure\Slim\Middleware\JWTAuthenticationHandler;
 use App\Infrastructure\Slim\Middleware\NoCacheMiddleware;
@@ -62,14 +63,32 @@ return function (App $app) {
     })->add(NoCacheMiddleware::class)
         ->add(JWTAuthenticationHandler::class);
 
-    $app->group('', function (RouteCollectorProxy $group) {
-        $group->get('/dashboard', function (Request $request, Response $response, Environment $twig) {
+    $app->group('/app', function (RouteCollectorProxy $group) {
+
+        $group->get('', function (Request $request, Response $response, Environment $twig) {
             $response->getBody()->write($twig->render('main.twig'));
             return $response->withHeader('Content-Type', 'text/html');
-        })->setName('dashboard')
-            ->add(Guard::class)
-            ->add(JWTAuthenticationHandler::class);
-    });
+        })->setName('home');
+
+        $group->group('/admin', function (RouteCollectorProxy $group)
+        {
+            $group->group('/users', function (RouteCollectorProxy $group)
+            {
+                $group->get('/add', [AdminController::class, 'viewAddUserForm'])
+                      ->setName('viewAddUserForm');
+
+                $group->get('/list', [AdminController::class, 'viewUsersList'])
+                      ->setName('viewUsersList');
+
+            });
+
+        });
+
+        $group->get('/profile/{id}', [UserController::class, 'viewUserProfile'])
+              ->setName('viewUserProfile');
+
+    })->add(Guard::class)
+      ->add(JWTAuthenticationHandler::class);
 
     /*
      * API - NO-AUTHENTICATION
@@ -85,8 +104,7 @@ return function (App $app) {
      */
     $app->group('/secure/api', function (RouteCollectorProxy $group) {
         $group->group('/users', function (RouteCollectorProxy $group) {
-            $group->get('', [ListUsersController::class, 'list']);
-            $group->get('/{id}', [ListUsersController::class, 'findById']);
+            $group->post('', [AdminController::class, 'addUser']);
         });
     })->add(JWTAuthenticationHandler::class)
         ->add(NoCacheMiddleware::class);
