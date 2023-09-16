@@ -1,7 +1,7 @@
 {
-  "name": "project_name",
-  "banner_name": "ProjectName",
-  "description": "Some description about the project",
+  "name": "slim-sleketon",
+  "banner_name": "Slim Sleketon",
+  "description": "Minified version from Slim Framework 4 Skeleton Application",
   "version": "1.0.0",
   "private": true,
   "keywords": [
@@ -10,25 +10,23 @@
     "dashboard",
     "webapp"
   ],
-  "homepage": "http://thetheme.io/theadmin",
-  "author": "TheTheme.io",
+  "homepage": "https://github.com/MauroMaia/Slim-Skeleton",
+  "author": "",
   "devDependencies": {
-    "autoprefixer": "^7.1.4",
-    "grunt": "^1.0.1",
+    "autoprefixer": "^7.2.6",
+    "grunt": "^1.6.1",
     "grunt-browser-sync": "^2.2.0",
-    "grunt-contrib-clean": "^1.0.0",
+    "grunt-contrib-clean": "^1.1.0",
     "grunt-contrib-concat": "^1.0.1",
     "grunt-contrib-copy": "^1.0.0",
-    "grunt-contrib-cssmin": "^1.0.0",
-    "grunt-contrib-uglify": "^2.2.0",
-    "grunt-contrib-watch": "^1.0.0",
+    "grunt-contrib-cssmin": "^1.0.2",
+    "grunt-contrib-uglify": "^2.3.0",
+    "grunt-contrib-watch": "^1.1.0",
     "grunt-neuter": "^0.6.0",
     "grunt-postcss": "^0.9.0",
-    "grunt-sass": "2.0.0",
+    "jquery": "^3.7.1",
     "load-grunt-tasks": "^3.5.2",
-    "node-sass": "^4.9.2",
-    "postcss-flexbugs-fixes": "^3.2.0",
+    "postcss-flexbugs-fixes": "^3.3.1",
     "time-grunt": "^1.4.0"
-  },
-  "dependencies": {}
+  }
 }

@@ -82,6 +82,9 @@ return function (App $app) {
 
             });
 
+            $group->get('/user/{id}', [UserController::class, 'viewUserProfile'])
+                ->setName('viewUserProfile');
+
         });
 
         $group->get('/profile/{id}', [UserController::class, 'viewUserProfile'])
