@@ -44,10 +44,10 @@ module.exports = function(grunt) {
         files: ['assets/js/*.js', '!assets/js/*.min.js'],
         tasks: ['js']
       },
-      script_dir: {
-        files: ['assets/js/script/*.js', 'assets/js/script/**/*.js'],
+      /*script_dir: {
+        files: ['assets/js/script/*.js', 'assets/js/script/** /*.js'],
         tasks: ['neuter:js']
-      },
+      },*/
     },
 
     // Clean files and directories
@@ -56,21 +56,6 @@ module.exports = function(grunt) {
      js:['assets/js/**.min.js','!assets/js/core.min.js'],
      css:['assets/css/*.min.css','!assets/css/core.min.css']
     },
-
-
-    // Copy files
-    //
-    copy: {
-
-      dist: {
-        files: [
-          {expand: true, cwd: '.', src: ['**'], dest: 'dist'}
-        ],
-      },
-
-    },
-
-
 
     // Import file for script.js
     //
@@ -84,7 +69,6 @@ module.exports = function(grunt) {
       },
     },
 
-
     // Uglify JS files
     //
     uglify: {
@@ -97,6 +81,20 @@ module.exports = function(grunt) {
         expand: true,
         src: ['assets/js/**.js','!assets/js/core.min.js'],
         ext: '.min.js'
+      }
+    },
+
+    // Import file for script.js
+    //
+    eslint: {
+      browserFiles: {
+        src: [
+          "assets/js/**/*js",
+          "!assets/js/**/*.min.js",
+          "!assets/js/app.js",
+          "!assets/js/script.js",
+          "!assets/js/script/*.js",
+        ]
       }
     },
 
@@ -134,7 +132,7 @@ module.exports = function(grunt) {
   });
 
   // These plugins provide necessary tasks.
-  require('load-grunt-tasks')(grunt, { scope: 'devDependencies', pattern: ['grunt-*'] });
+  require('load-grunt-tasks')(grunt, { scope: 'devDependencies', pattern: ['grunt-*','gruntify-*'] });
   require('autoprefixer')(grunt);
   require('time-grunt')(grunt);
 
@@ -148,12 +146,11 @@ module.exports = function(grunt) {
       'clean:dist',
       'css',
       'js',
-      'copy:dist',
       'clean:dist_copied'
     ]
   );
 
   grunt.registerTask( 'css', ['clean:css','cssmin', 'postcss'] );
 
-  grunt.registerTask( 'js', ['clean:js','neuter:js', 'uglify'] );
+  grunt.registerTask( 'js', ['clean:js','eslint','neuter:js', 'uglify'] );
 };
