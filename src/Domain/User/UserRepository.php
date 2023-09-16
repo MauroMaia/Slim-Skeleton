@@ -17,7 +17,7 @@ interface UserRepository
      * @return User
      * @throws UserNotFoundException
      */
-    public function findUserById(int $id): User;
+    public function findById(int $id): User;
 
     /**
      * @param string $username
@@ -25,7 +25,7 @@ interface UserRepository
      * @return User
      * @throws UserNotFoundException
      */
-    public function findUserByUsername(string $username): User;
+    public function findByUsername(string $username): User;
 
     /**
      * @param string $email
@@ -33,11 +33,14 @@ interface UserRepository
      * @return User
      * @throws UserNotFoundException
      */
-    public function findUserByEmail(string $email): User;
+    public function findByEmail(string $email): User;
 
     public function updateUserPassword(User $user, string $newHash): bool;
 
     public function updateUserRecoverPassword(User $user, string $newHash): bool;
 
-    public function addUser(User $user): bool;
+    public function add(User $user): bool;
+
+    public function delete(int $userId):bool;
+
 }

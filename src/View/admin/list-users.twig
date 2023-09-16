@@ -25,7 +25,7 @@
                                 </a>
 
                                 <div class="media-body">
-                                    <h6><a href="#">{{ user.firstName }} {{ user.lastName }}</a></h6>
+                                    <h6><a href="#">{{ user.firstName }} {{ user.lastName }} <span class="text-fader">#{{ user.id }}</span></a></h6>
                                     <small class="text-fader">{{ user.jobTitle }}</small>
                                 </div>
 
@@ -34,9 +34,8 @@
                                        href="app/admin/user/{{ user.id }}">Edit</a>
 
                                     {%  if user.id != 1 %}
-                                        <a class="btn btn-sm btn-bold btn-round btn-outline btn-danger w-100px"
-                                            onclick="alert('Delete User {{ user.id }} : {{ user.firstName }} {{ user.lastName }} ?')"
-                                            >Delete</a>
+                                        <button class="btn btn-sm btn-bold btn-round btn-outline btn-danger w-100px"
+                                           value="{{ user.id }}" id="delete-{{ user.id }}" >Delete</button>
                                     {%  endif %}
                                 </div>
                             </div>
@@ -53,4 +52,7 @@
 
         </div>
     </div>
+
+    <script src="{{ base_path }}/assets/js/admin/list-users.min.js"></script>
+
 {% endblock %}

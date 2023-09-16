@@ -40,12 +40,68 @@ class InMemoryUserRepository implements UserRepository
     /**
      * {@inheritdoc}
      */
-    public function findUserById(int $id): User
+    public function findById(int $id): User
     {
         if (!isset($this->users[$id])) {
             throw new UserNotFoundException();
         }
 
         return $this->users[$id];
+    }
+
+    /**
+     * @param string $username
+     * @return User
+     */
+    public function findByUsername(string $username): User
+    {
+        // TODO: Implement findByUsername() method.
+    }
+
+    /**
+     * @param string $email
+     * @return User
+     */
+    public function findByEmail(string $email): User
+    {
+        // TODO: Implement findByEmail() method.
+    }
+
+    /**
+     * @param User $user
+     * @param string $newHash
+     * @return bool
+     */
+    public function updateUserPassword(User $user, string $newHash): bool
+    {
+        // TODO: Implement updateUserPassword() method.
+    }
+
+    /**
+     * @param User $user
+     * @param string $newHash
+     * @return bool
+     */
+    public function updateUserRecoverPassword(User $user, string $newHash): bool
+    {
+        // TODO: Implement updateUserRecoverPassword() method.
+    }
+
+    /**
+     * @param User $user
+     * @return bool
+     */
+    public function add(User $user): bool
+    {
+        // TODO: Implement add() method.
+    }
+
+    /**
+     * @param int $userId
+     * @return bool
+     */
+    public function delete(int $userId): bool
+    {
+        // TODO: Implement delete() method.
     }
 }

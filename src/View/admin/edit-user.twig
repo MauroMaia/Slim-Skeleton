@@ -25,31 +25,37 @@
                                 <div class="row">
                                     <div class="form-group col-md-6">
                                         <label class="text-fader">First name</label>
-                                        <input class="form-control" type="text" value="{{ user.firstName }}">
+                                        <input id="firstName" name="firstName"
+                                                class="form-control" type="text" value="{{ user.firstName }}" >
                                     </div>
 
                                     <div class="form-group col-md-6">
                                         <label class="text-fader">Last name</label>
-                                        <input class="form-control" type="text" value="{{ user.LastName }}">
+                                        <input id="lastName" name="lastName"
+                                                class="form-control" type="text" value="{{ user.LastName }}" >
                                     </div>
                                 </div>
+
                                 <div class="row">
                                     <div class="form-group col-md-6">
                                         <label class="text-fader">Job Title</label>
-                                        <input class="form-control" type="text" value="{{ user.jobTitle }}">
+                                        <input id="jobTitle" name="jobTitle"
+                                                class="form-control" type="text" value="{{ user.jobTitle }}" >
                                     </div>
-
-
                                 </div>
 
                                 <div class="form-group">
                                     <label class="text-fader">Email</label>
-                                    <input class="form-control" type="email" value="{{ user.email }}">
+                                    <input id="email" name="email"
+                                            class="form-control" type="email" value="{{ user.email }}">
                                 </div>
 
                                 <br>
 
-                                <button class="btn btn-block btn-primary">Save Changes</button>
+                                <input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
+                                <input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
+
+                                <button class="btn btn-block btn-primary" id="save-basic" disabled>Save Changes</button>
 
                             </div>
                         </div>
@@ -70,17 +76,21 @@
 
                                 <div class="form-group">
                                     <label class="text-fader">New password</label>
-                                    <input class="form-control" type="password">
+                                    <input id="password" name="password"
+                                            class="form-control" type="password">
                                 </div>
 
                                 <div class="form-group">
                                     <label class="text-fader">Confirm new password</label>
-                                    <input class="form-control" type="password">
+                                    <input id="password-conf" class="form-control" type="password">
                                 </div>
 
                                 <br>
 
-                                <button class="btn btn-block btn-primary">Save Changes</button>
+                                <input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
+                                <input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
+
+                                <button class="btn btn-block btn-primary" id="save-password" disabled>Save Changes</button>
 
                             </div>
                         </div>
@@ -90,5 +100,7 @@
             </div>
         </div>
     </div>
+
+    <script src="{{ base_path }}/assets/js/admin/edit-user.min.js"></script>
 
 {% endblock %}

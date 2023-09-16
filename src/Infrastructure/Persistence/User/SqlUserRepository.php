@@ -24,7 +24,7 @@ readonly class SqlUserRepository implements UserRepository
      * @return true
      * @throws Exception
      */
-    public function addUser(User $user): bool
+    public function add(User $user): bool
     {
         $result = $this->db->runWithParams(
             "INSERT INTO user(username, firstName, lastName, email, password, jobTitle) values (?,?,?,?,?,?);",
@@ -85,7 +85,7 @@ readonly class SqlUserRepository implements UserRepository
      * {@inheritdoc}
      * @throws Exception
      */
-    public function findUserById(int $id): User
+    public function findById(int $id): User
     {
         $result = $this->db->runWithParams("SELECT * FROM user WHERE id = ?;", [$id]);
 
@@ -111,7 +111,7 @@ readonly class SqlUserRepository implements UserRepository
      * {@inheritdoc}
      * @throws Exception
      */
-    public function findUserByUsername(string $username): User
+    public function findByUsername(string $username): User
     {
         $result = $this->db->runWithParams("SELECT * FROM user WHERE username = ? limit 1;", [$username]);
 
@@ -133,7 +133,7 @@ readonly class SqlUserRepository implements UserRepository
         );
     }
 
-    public function findUserByEmail(string $email): User
+    public function findByEmail(string $email): User
     {
         $result = $this->db->runWithParams("SELECT * FROM user where email = ? limit 1;", [$email]);
 
@@ -178,6 +178,14 @@ readonly class SqlUserRepository implements UserRepository
         if (!isset($result[0])) {
             return false;
         }
+        return true;
+    }
+
+    public function delete(int $userId): bool
+    {
+        if($userId == 1) return false;
+        $result = $this->db->runWithParams("DELETE FROM user WHERE id = ?;", [$userId]);
+
         return true;
     }
 
