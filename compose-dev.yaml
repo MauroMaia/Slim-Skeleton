@@ -1,0 +1,34 @@
+version: '3.7'
+
+volumes:
+  libmariadb:
+    driver: local
+
+services:
+  slim:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    working_dir: /var/www
+    command: php -S 0.0.0.0:8080 -t .
+    environment:
+      docker: "true"
+    ports:
+      - "8080:8080"
+    volumes:
+      - .:/var/www
+    links:
+      - db_mysql
+  db_mysql:
+    image: mariadb:latest
+    restart: always
+    environment:
+      MARIADB_ROOT_PASSWORD: "password"
+      MARIADB_DATABASE: "slim"
+      MARIADB_AUTO_UPGRADE: "true"
+    volumes:
+      - libmariadb:/var/lib/mysql
+      - ./schema:/docker-entrypoint-initdb.d
+    ports:
+      - "3306:3306"
