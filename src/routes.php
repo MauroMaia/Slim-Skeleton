@@ -106,9 +106,13 @@ return function (App $app) {
      * API - REQUIRES AUTHENTICATION
      */
     $app->group('/secure/api', function (RouteCollectorProxy $group) {
+
         $group->group('/users', function (RouteCollectorProxy $group) {
             $group->post('', [AdminController::class, 'addUser']);
         });
+
+        $group->delete('/admin/user/{id}', [UserController::class, 'deleteUserProfile'])->setName('deleteUserProfile');
+
     })->add(JWTAuthenticationHandler::class)
         ->add(NoCacheMiddleware::class);
 };

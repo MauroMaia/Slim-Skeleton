@@ -79,7 +79,10 @@ module.exports = function(grunt) {
       },
       script: {
         expand: true,
-        src: ['assets/js/**.js','!assets/js/core.min.js'],
+        src: [
+          'assets/js/**/*.js',
+          '!assets/js/core.min.js'
+        ],
         ext: '.min.js'
       }
     },

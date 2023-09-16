@@ -36,9 +36,26 @@ class UserController
     public function viewUserProfile(Request $request, Response $response, Environment $twig): Response|Message
     {
         $userId = (int)$request->getAttribute('id');
-        $user = $this->userRepository->findUserById($userId);
+        $user = $this->userRepository->findById($userId);
 
         $response->getBody()->write($twig->render('admin/edit-user.twig', ["user" => $user]));
         return $response->withHeader('Content-Type', 'text/html');
     }
+
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @param Environment $twig
+     *
+     * @return Response|Message
+     */
+    public function deleteUserProfile(Request $request, Response $response, Environment $twig): Response|Message
+    {
+        $userId = (int)$request->getAttribute('id');
+        if($this->userRepository->delete($userId)){
+            return $response->withStatus(200);
+        }
+        return $response->withStatus(400);
+    }
+
 }

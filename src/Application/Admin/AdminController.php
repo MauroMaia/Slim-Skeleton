@@ -59,7 +59,7 @@ class AdminController
         $password = $request->getParsedBody()['password'];
 
         try {
-            $this->userRepository->findUserByEmail($email);
+            $this->userRepository->findByEmail($email);
             throw new InvalidArgumentException("User Already exist");
         } catch (UserNotFoundException $ignore) {
         }
@@ -67,7 +67,7 @@ class AdminController
 
         $passwordHash = password_hash($password, null);
 
-        $user = $this->userRepository->addUser(
+        $user = $this->userRepository->add(
             new User(
                 id:              -1,
                 username:        $firstName . '.' . $lastName,

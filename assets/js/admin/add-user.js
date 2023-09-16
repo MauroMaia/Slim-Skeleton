@@ -9,13 +9,13 @@ $(document).ready(function () {
 		const password = $("#password").val()
 		const password_conf = $("#password-conf").val()
 
-		$("#save").disabled = !(
+		$("#save").prop("disabled",!(
 			password.length >= 8
 			&& password_conf.length >= 8
 			&& password_conf === password
 			&& firstName.length > 0
 			&& lastName.length > 0
 			&& email.length > 0
-		)
+		))
 	})
 })

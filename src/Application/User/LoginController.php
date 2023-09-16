@@ -55,7 +55,7 @@ class LoginController
     {
         $userId = (int)$request->getAttribute('id');
         $recoverPassword = $request->getAttribute('recoverPassword');
-        $user = $this->userRepository->findUserById($userId);
+        $user = $this->userRepository->findById($userId);
 
         if(empty($user->recoverPassword) || !password_verify($recoverPassword,$user->recoverPassword)) {
             $response->getBody()->write($twig->render('error/flow-end.twig', [
@@ -93,7 +93,7 @@ class LoginController
     public function doLoginRecover(Request $request, Response $response, Environment $twig, RouteParserInterface $router): Response|Message
     {
         $email = $request->getParsedBody()['email'];
-        $user = $this->userRepository->findUserByEmail($email);
+        $user = $this->userRepository->findByEmail($email);
 
         $recoverPassword = rand_string(32);
         $passwordHash = password_hash($recoverPassword, null);
@@ -124,7 +124,7 @@ class LoginController
         $userId = $request->getParsedBody()['code'];
         $recoverPassword = $request->getParsedBody()['recoverHash'];
 
-        $user = $this->userRepository->findUserById($userId);
+        $user = $this->userRepository->findById($userId);
 
         if (password_verify($recoverPassword, $user->recoverPassword)) {
 
@@ -146,7 +146,7 @@ class LoginController
         $username = $request->getParsedBody()['username'];
         $password = $request->getParsedBody()['password'];
 
-        $user = $this->userRepository->findUserByUsername($username);
+        $user = $this->userRepository->findByUsername($username);
         if (password_verify($password, $user->password)) {
             $token = new Token($user->getUsername());
             $token->encode();
