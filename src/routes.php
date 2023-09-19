@@ -39,6 +39,11 @@ return function (App $app) {
             ->withHeader('Location', $router->urlFor('viewLoginAuth'));
     });
 
+    $app->get('/app/terms', function (Request $request, Response $response, Environment $twig) {
+        $response->getBody()->write($twig->render('terms/main.twig'));
+        return $response->withHeader('Content-Type', 'text/html');
+    })->setName('terms');
+
     /*
      * NO-AUTHENTICATION
      */
