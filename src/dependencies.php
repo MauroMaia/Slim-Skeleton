@@ -50,7 +50,17 @@ $containerBuilder->addDefinitions(
 
         DatabaseConnection::class => fn(LoggerInterface $logger) => new DatabaseConnection($logger),
 
-        Guard::class => fn(App $app) => new Guard($app->getResponseFactory(), persistentTokenMode: true),
+        Guard::class => function (App $app, LoggerInterface $logger)
+        {
+            $guard = new Guard($app->getResponseFactory(), persistentTokenMode: true);
+            $guard->setFailureHandler(function () use ($logger, $app)
+            {
+                $logger->warning("Invalid csrf token");
+                return $app->getResponseFactory()->createResponse(400);
+            });
+
+            return $guard;
+        },
 
         RouteParserInterface::class => fn(App $app) => $app->getRouteCollector()->getRouteParser()
     ]);
