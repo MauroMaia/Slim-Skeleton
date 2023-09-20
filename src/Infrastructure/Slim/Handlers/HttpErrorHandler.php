@@ -6,7 +6,9 @@ namespace App\Infrastructure\Slim\Handlers;
 
 use App\Application\ActionError;
 use App\Application\ActionPayload;
+use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Log\LoggerInterface;
 use Slim\Exception\HttpBadRequestException;
 use Slim\Exception\HttpException;
 use Slim\Exception\HttpForbiddenException;
@@ -14,14 +16,18 @@ use Slim\Exception\HttpMethodNotAllowedException;
 use Slim\Exception\HttpNotFoundException;
 use Slim\Exception\HttpNotImplementedException;
 use Slim\Exception\HttpUnauthorizedException;
-use Slim\Handlers\ErrorHandler as SlimErrorHandler;
+use Slim\Handlers\ErrorHandler;
+use Slim\Interfaces\CallableResolverInterface;
 use Throwable;
 
-class HttpErrorHandler extends SlimErrorHandler
+class HttpErrorHandler extends ErrorHandler
 {
-    /**
-     * @inheritdoc
-     */
+    public function __construct(CallableResolverInterface $callableResolver, ResponseFactoryInterface $responseFactory, ?LoggerInterface $logger = null)
+    {
+        parent::__construct($callableResolver, $responseFactory, $logger);
+        $this->logger->debug(self::class . " :: __construct");
+    }
+
     protected function respond(): Response
     {
         $exception = $this->exception;

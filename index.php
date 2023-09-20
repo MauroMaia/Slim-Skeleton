@@ -2,11 +2,10 @@
 
 declare(strict_types=1);
 
-use App\Infrastructure\Slim\Handlers\HttpErrorHandler;
 use App\Infrastructure\Slim\Handlers\ShutdownHandler;
 use DI\Bridge\Slim\Bridge;
-use Psr\Log\LoggerInterface;
 use Slim\Factory\ServerRequestCreatorFactory;
+use Slim\Interfaces\ErrorHandlerInterface;
 
 require __DIR__ . '/vendor/autoload.php';
 
@@ -16,7 +15,8 @@ session_start();
 // Instantiate PHP-DI ContainerBuilder
 $containerBuilder = require __DIR__ . '/src/dependencies.php';
 
-if (false) { // Should be set to true in production
+if (PRODUCTION)
+{
 	$containerBuilder->enableCompilation(__DIR__ . '/var/cache');
 }
 
@@ -29,7 +29,6 @@ $container = $containerBuilder->build();
 
 // Instantiate the app
 $app = Bridge::create($container);
-$callableResolver = $app->getCallableResolver();
 
 // Register middleware
 $middleware = require __DIR__ . '/src/middleware.php';
@@ -43,24 +42,11 @@ $routes($app);
 $serverRequestCreator = ServerRequestCreatorFactory::create();
 $request = $serverRequestCreator->createServerRequestFromGlobals();
 
-// Create Error Handler
-$responseFactory = $app->getResponseFactory();
-$errorHandler = new HttpErrorHandler($callableResolver, $responseFactory,$app->getContainer()->get(LoggerInterface::class));
-
 // Create Shutdown Handler
-$shutdownHandler = new ShutdownHandler($request, $errorHandler, DISPLAY_ERRORS);
+$shutdownHandler = new ShutdownHandler($request, $container->get(ErrorHandlerInterface::class), DISPLAY_ERRORS);
 register_shutdown_function($shutdownHandler);
 
-// Add Routing Middleware
-$app->addRoutingMiddleware();
-
-// Add Body Parsing Middleware
-$app->addBodyParsingMiddleware();
 $app->setBasePath(BASE_PATH);
-
-// Add Error Middleware
-$errorMiddleware = $app->addErrorMiddleware(DISPLAY_ERRORS, LOGGER_REGISTER_ERRORS, LOGGER_REGISTER_ERRORS_DETAILS);
-$errorMiddleware->setDefaultErrorHandler($errorHandler);
 
 // Run App
 $app->run();

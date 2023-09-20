@@ -8,14 +8,23 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\MiddlewareInterface as Middleware;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
+use Psr\Log\LoggerInterface;
 
-class NoCacheMiddleware implements Middleware
+readonly class NoCacheMiddleware implements Middleware
 {
+
+    public function __construct(private LoggerInterface $logger)
+    {
+        $this->logger->debug(self::class . " :: __construct");
+    }
+
     /**
      * {@inheritdoc}
      */
     public function process(Request $request, RequestHandler $handler): Response
     {
+        $this->logger->debug(self::class . " :: process");
+
         // This variable should be set to the allowed host from which your API can be accessed with
         $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
 
