@@ -2,14 +2,17 @@
 
 use Monolog\Level;
 
-defined('BASE_PATH')        or define('BASE_PATH', '');
-defined('APP_NAME')         or define('APP_NAME', 'slim-skeleton');
-defined('APP_DESCRIPTION')  or define('APP_DESCRIPTION', 'slim-skeleton');
+defined('BASE_PATH')            or define('BASE_PATH', '');
+defined('APP_NAME')             or define('APP_NAME', 'slim-skeleton');
+defined('APP_DESCRIPTION')      or define('APP_DESCRIPTION', 'slim-skeleton');
+defined('PROJECT_OWNER_NAME')   or define('PROJECT_OWNER_NAME', 'slim-skeleton');
+defined('PROJECT_OWNER_URL')    or define('PROJECT_OWNER_URL', '');
+defined('PRODUCTION')           or define('PRODUCTION', true);
 
 
 // SLIM
 // Should be set to false in production
-defined('DISPLAY_ERRORS')   or define('DISPLAY_ERRORS', true);
+defined('DISPLAY_ERRORS')   or define('DISPLAY_ERRORS', PRODUCTION);
 
 // logger
 defined('LOGGER_REGISTER_ERRORS')           or define('LOGGER_REGISTER_ERRORS', true);
@@ -21,7 +24,7 @@ defined('LOGGER_INTERNAL_CONFIGS')          or define('LOGGER_INTERNAL_CONFIGS',
 ]);
 
 // db
-defined('DATABASE_HOST')        or define('DATABASE_HOST', '127.0.0.1');
+defined('DATABASE_HOST')        or define('DATABASE_HOST', 'db_mysql');
 defined('DATABASE_NAME')        or define('DATABASE_NAME', 'slim');
 defined('DATABASE_USER')        or define('DATABASE_USER', 'root');
 defined('DATABASE_PASSWORD')    or define('DATABASE_PASSWORD', 'password');

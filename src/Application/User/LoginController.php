@@ -21,7 +21,9 @@ class LoginController
 {
     use HttpResponse;
 
-    public function __construct(public LoggerInterface $logger, public UserRepository $userRepository) { }
+    public function __construct(
+        public LoggerInterface $logger,
+        public UserRepository $userRepository) { }
 
     /**
      * @throws RuntimeError
