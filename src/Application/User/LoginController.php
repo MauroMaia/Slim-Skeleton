@@ -8,6 +8,7 @@ use App\Infrastructure\EmailHandler;
 use App\Infrastructure\Slim\Authentication\Token;
 use App\Infrastructure\Slim\HttpResponse;
 use Psr\Log\LoggerInterface;
+use Slim\App;
 use Slim\Interfaces\RouteParserInterface;
 use Slim\Psr7\Message;
 use Slim\Psr7\Request;
@@ -20,10 +21,14 @@ use Twig\Error\SyntaxError;
 class LoginController
 {
     use HttpResponse;
+    private App $app;
 
     public function __construct(
+        App $app,
         public LoggerInterface $logger,
-        public UserRepository $userRepository) { }
+        public UserRepository $userRepository) {
+        $this->app = $app;
+    }
 
     /**
      * @throws RuntimeError
@@ -152,7 +157,7 @@ class LoginController
         if (password_verify($password, $user->password)) {
             $token = new Token($user->getUsername());
             $token->encode();
-            setcookie("token", $token->token, time() + 3600, empty(BASE_PATH) ? '/' : BASE_PATH);
+            setcookie("token", $token->token, time() + 3600, empty($this->app->getBasePath()) ? '/' : $this->app->getBasePath());
             return $response->withStatus(301)->withHeader('Location', $router->urlFor('home'));
         } else {
             $this->logger->warning("Invalid login user password");

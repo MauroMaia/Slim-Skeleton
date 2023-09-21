@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Application\BasePathMiddleware;
 use App\Infrastructure\Slim\Middleware\NoCacheMiddleware;
 use App\Infrastructure\Slim\Middleware\RequestLoggingMiddleware;
 use App\Infrastructure\Slim\Middleware\SessionMiddleware;
@@ -20,6 +21,7 @@ return function (App $app) {
     // Add Routing Middleware
     $app->addRoutingMiddleware();
 
+    $app->add(new BasePathMiddleware($app));
     $app->add(SessionMiddleware::class);
     $app->add(NoCacheMiddleware::class);
 

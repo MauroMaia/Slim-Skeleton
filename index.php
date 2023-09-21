@@ -1,7 +1,11 @@
 <?php
-
 declare(strict_types=1);
 
+$vendorDir = __DIR__ . '/vendor';
+if (is_dir($vendorDir) === false) {
+    echo "The 'vendor' folder does not exist. Please run composer to install dependencies.";
+    return;
+}
 use App\Infrastructure\Slim\Handlers\ShutdownHandler;
 use DI\Bridge\Slim\Bridge;
 use Slim\Factory\ServerRequestCreatorFactory;
@@ -46,7 +50,6 @@ $request = $serverRequestCreator->createServerRequestFromGlobals();
 $shutdownHandler = new ShutdownHandler($request, $container->get(ErrorHandlerInterface::class), DISPLAY_ERRORS);
 register_shutdown_function($shutdownHandler);
 
-$app->setBasePath(BASE_PATH);
 
 // Run App
 $app->run();
