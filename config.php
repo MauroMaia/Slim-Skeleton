@@ -2,7 +2,7 @@
 
 use Monolog\Level;
 
-defined('BASE_PATH')            or define('BASE_PATH', '');
+defined('BASE_PATH')            or define('BASE_PATH', 'slim-skeleton'); // this is automatic for slim but not in one case
 defined('APP_NAME')             or define('APP_NAME', 'slim-skeleton');
 defined('APP_DESCRIPTION')      or define('APP_DESCRIPTION', 'slim-skeleton');
 defined('PROJECT_OWNER_NAME')   or define('PROJECT_OWNER_NAME', 'slim-skeleton');

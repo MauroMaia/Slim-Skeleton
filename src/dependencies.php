@@ -55,7 +55,7 @@ $containerBuilder->addDefinitions(
             $twig = new Environment($loader);
             $twig->addGlobal('project_owner_url', PROJECT_OWNER_URL);
             $twig->addGlobal('project_owner_name', PROJECT_OWNER_NAME);
-            $twig->addGlobal('base_path', BASE_PATH);
+            $twig->addGlobal('base_path',  rtrim($this->app->getBasePath(), '/'));
             $twig->addGlobal('app_name', APP_NAME);
             $twig->addGlobal('app_description', APP_DESCRIPTION);
 
