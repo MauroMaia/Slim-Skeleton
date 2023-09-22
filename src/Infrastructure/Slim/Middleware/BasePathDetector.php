@@ -79,7 +79,7 @@ class BasePathDetector
         $scriptName = $server['SCRIPT_NAME'];
 
         $basePath = (string)parse_url($server['REQUEST_URI'], PHP_URL_PATH);
-        $scriptName = str_replace('\\', '/', dirname($scriptName, 2));
+        $scriptName = str_replace('\\', '/', dirname($scriptName, 1)); // if you want other folder besides /to be the root update here to 2 or 3 or whatever deep you are
 
         if ($scriptName === '/') {
             return '';
