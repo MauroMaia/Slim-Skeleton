@@ -1,22 +1,25 @@
 <!-- Topbar -->
 <header class="topbar">
     <div class="topbar-left">
-
         <a class="topbar-btn d-none d-md-block" href="#" data-provide="fullscreen tooltip" title="Fullscreen">
             <i class="material-icons fullscreen-default">fullscreen</i>
             <i class="material-icons fullscreen-active">fullscreen_exit</i>
         </a>
-
         <div class="topbar-divider d-none d-md-block"></div>
-
-
-
     </div>
     <div class="topbar-right">
-        <a class="btn btn-xs btn-round btn-success mr-2" href="logout">logout</a>
+
+        <ul class="topbar-btns">
+            <li class="dropdown">
+                <span class="topbar-btn" data-toggle="dropdown" aria-expanded="false"><img class="avatar" src="{{ base_path }}/assets/img/avatar/1.jpg" alt="..."></span>
+                <div class="dropdown-menu dropdown-menu-right" x-placement="bottom-end" style="position: absolute; will-change: top, left; top: 65px; left: 60px;">
+                    <a class="dropdown-item" href="{{ base_path }}/settings"><i class="ti-settings"></i> Settings</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="{{ base_path }}/logout"><i class="ti-power-off"></i> Logout</a>
+                </div>
+            </li>
+        </ul>
+
     </div>
-
-
-
 </header>
 <!-- END Topbar -->

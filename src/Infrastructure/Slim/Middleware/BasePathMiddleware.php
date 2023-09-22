@@ -1,18 +1,20 @@
 <?php
 
 
-namespace App\Application;
+namespace App\Infrastructure\Slim\Middleware;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use Slim\App;
+use Slim\Psr7\Request;
+use Slim\Psr7\Response;
 
 /**
  * Slim 4 Base path middleware.
  */
-final class BasePathMiddleware implements MiddlewareInterface
+final class BasePathMiddleware
 {
     /**
      * @var App The slim app
@@ -44,12 +46,13 @@ final class BasePathMiddleware implements MiddlewareInterface
      *
      * @return ResponseInterface The response
      */
-    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
+
+    public function __invoke(Request $request, RequestHandler $handler): Response
     {
         $detector = new BasePathDetector($request->getServerParams(), $this->phpSapi);
 
         $this->app->setBasePath($detector->getBasePath());
-
+        die("here" . $detector->getBasePath());
         return $handler->handle($request);
     }
 }

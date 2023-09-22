@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Application;
+namespace App\Infrastructure\Slim\Middleware;
 
 /**
  * A URL base path detector.

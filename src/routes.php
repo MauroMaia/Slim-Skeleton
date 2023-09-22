@@ -71,7 +71,7 @@ return function (App $app) {
     $app->group('/app', function (RouteCollectorProxy $group) {
 
         $group->get('', function (Request $request, Response $response, Environment $twig) {
-            $response->getBody()->write($twig->render('main.twig'));
+            $response->getBody()->write($twig->render('dashboard.twig'));
             return $response->withHeader('Content-Type', 'text/html');
         })->setName('home');
 

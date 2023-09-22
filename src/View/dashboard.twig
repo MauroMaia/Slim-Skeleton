@@ -1,6 +1,8 @@
-{% extends "base.twig" %}
+{% extends "template.twig" %}
 
 {% block head %}
+
+    <title>Dashboard | {{ app_name }}</title>
 
     <!--  Open Graph Tags -->
     <meta property="og:title" content="The Slim Template of 2023!">
@@ -12,10 +14,16 @@
     <meta name="twitter:card" content="summary_large_image">
 
     {{ parent() }}
+
 {% endblock %}
 
 
 {% block content %}
-
-
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            oi
+        </div>
+    </div>
+</div>
 {% endblock %}
