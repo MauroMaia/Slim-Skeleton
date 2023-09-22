@@ -8,6 +8,8 @@ defined('APP_DESCRIPTION')      or define('APP_DESCRIPTION', 'slim-skeleton');
 defined('PROJECT_OWNER_NAME')   or define('PROJECT_OWNER_NAME', 'slim-skeleton');
 defined('PROJECT_OWNER_URL')    or define('PROJECT_OWNER_URL', '');
 defined('PRODUCTION')           or define('PRODUCTION', true);
+defined('APP_LANG')         or define('APP_LANG', 'en');
+defined('APP_KEYWORDS')         or define('APP_KEYWORDS', 'Quinta Cardeal');
 
 
 // SLIM

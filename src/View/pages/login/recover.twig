@@ -1,9 +1,9 @@
-{% extends "base.twig" %}
+{% extends "template.twig" %}
 
 
 {% block head %}
 
-    <title>Recover &mdash; Slim</title>
+    <title>Recover | {{ app_name }}</title>
 
     {{ parent() }}
 {% endblock %}
@@ -24,7 +24,7 @@
 
             <form class="form-type-material" method="post" action="api/login/recover">
                 <div class="form-group">
-                    <input type="email" class="form-control" id="email" name="email">
+                    <input type="text" class="form-control" id="email" name="email">
                     <label for="email">Email address</label>
                 </div>
 

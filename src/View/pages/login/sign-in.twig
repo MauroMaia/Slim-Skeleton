@@ -1,12 +1,8 @@
-{% extends "base.twig" %}
-
+{% extends "template.twig" %}
 
 {% block head %}
-
-    <title>Login &mdash; Slim</title>
-
+    <title>Login | {{ app_name }}</title>
   {{ parent() }}
-
 {% endblock %}
 
 {% block preloader %} {% endblock %}
