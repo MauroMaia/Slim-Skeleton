@@ -37,9 +37,10 @@ class LoginController
      */
     public function viewLoginAuth(Request $request, Response $response, Environment $twig): Response|Message
     {
-        $response->getBody()->write($twig->render('pages/login/login.twig', []));
+        $response->getBody()->write($twig->render('pages/login/sign-in.twig', []));
         return $response->withHeader('Content-Type', 'text/html');
     }
+
 
     /**
      * @throws RuntimeError
@@ -153,7 +154,15 @@ class LoginController
         $username = $request->getParsedBody()['username'];
         $password = $request->getParsedBody()['password'];
 
-        $user = $this->userRepository->findByUsername($username);
+        try
+        {
+            $user = $this->userRepository->findByUsername($username);
+        }
+        catch (UserNotFoundException $e)
+        {
+            $this->logger->warning("Invalid login user password");
+            return $response->withStatus(401);
+        }
         if (password_verify($password, $user->password)) {
             $token = new Token($user->getUsername());
             $token->encode();
@@ -161,7 +170,7 @@ class LoginController
             return $response->withStatus(301)->withHeader('Location', $router->urlFor('home'));
         } else {
             $this->logger->warning("Invalid login user password");
-            return $response->withStatus(403);
+            return $response->withStatus(401);
         }
     }
 

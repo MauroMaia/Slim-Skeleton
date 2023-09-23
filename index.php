@@ -2,7 +2,8 @@
 declare(strict_types=1);
 
 $vendorDir = __DIR__ . '/vendor';
-if (is_dir($vendorDir) === false) {
+if (is_dir($vendorDir) === false)
+{
     echo "The 'vendor' folder does not exist. Please run composer to install dependencies.";
     return;
 }

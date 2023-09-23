@@ -3,6 +3,7 @@
 
 namespace App\Infrastructure\Slim\Middleware;
 
+use App\Infrastructure\Slim\BasePathDetector;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -52,7 +53,6 @@ final class BasePathMiddleware
         $detector = new BasePathDetector($request->getServerParams(), $this->phpSapi);
 
         $this->app->setBasePath($detector->getBasePath());
-        die("here" . $detector->getBasePath());
         return $handler->handle($request);
     }
 }

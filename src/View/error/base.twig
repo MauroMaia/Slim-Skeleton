@@ -13,13 +13,13 @@
               rel="stylesheet">
 
         <!-- Styles -->
-        <link href="{{ base_path }}/assets/css/core.min.css" rel="stylesheet">
-        <link href="{{ base_path }}/assets/css/app.css" rel="stylesheet">
-        <link href="{{ base_path }}/assets/css/style.css" rel="stylesheet">
+        <link href="{{ base_path() }}/assets/css/core.min.css" rel="stylesheet">
+        <link href="{{ base_path() }}/assets/css/app.css" rel="stylesheet">
+        <link href="{{ base_path() }}/assets/css/style.css" rel="stylesheet">
 
         <!-- Favicons -->
-        <link rel="apple-touch-icon" href="{{ base_path }}/assets/img/apple-touch-icon.png">
-        <link rel="icon" href="{{ base_path }}/assets/img/favicon.ico">
+        <link rel="apple-touch-icon" href="{{ base_path() }}/assets/img/apple-touch-icon.png">
+        <link rel="icon" href="{{ base_path() }}/assets/img/favicon.ico">
     {% endblock %}
 </head>
 
@@ -39,7 +39,7 @@
                     <a class="nav-link" href="mailto:dev@maurofilipemaia.dev">Report problem</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ base_path }}/">Return home</a>
+                    <a class="nav-link" href="{{ base_path() }}/">Return home</a>
                 </li>
             </ul>
         </div>
@@ -51,9 +51,9 @@
 
 
 <!-- Scripts -->
-<script src="{{ base_path }}/assets/js/core.min.js"></script>
-<script src="{{ base_path }}/assets/js/app.js"></script>
-<script src="{{ base_path }}/assets/js/script.js"></script>
+<script src="{{ base_path() }}/assets/js/core.min.js"></script>
+<script src="{{ base_path() }}/assets/js/app.js"></script>
+<script src="{{ base_path() }}/assets/js/script.js"></script>
 
 </body>
 
