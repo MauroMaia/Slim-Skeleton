@@ -2,7 +2,7 @@
 <html lang="{{ app_lang }}">
 
 <head>
-    <base href="{{ base_path }}/">
+    <base href="{{ base_path() }}/"/>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="{{ app_description }}">
@@ -13,13 +13,14 @@
           rel="stylesheet">
 
     <!-- Styles -->
-    <link href="{{ base_path }}/assets/css/core.min.css" rel="stylesheet">
-    <link href="{{ base_path }}/assets/css/app.css" rel="stylesheet">
-    <link href="{{ base_path }}/assets/css/style.css" rel="stylesheet">
+    <link href="{{ base_path() }}/assets/css/core.min.css" rel="stylesheet">
+    <link href="{{ base_path() }}/assets/css/app.css" rel="stylesheet">
+    <link href="{{ base_path() }}/assets/css/style.css" rel="stylesheet">
+
 
     <!-- Favicons -->
-    <link rel="apple-touch-icon" href="{{ base_path }}/assets/img/apple-touch-icon.png">
-    <link rel="icon" href="{{ base_path }}/assets/img/favicon.png">
+    <link rel="apple-touch-icon" href="{{ base_path() }}/assets/img/apple-touch-icon.png">
+    <link rel="icon" href="{{ base_path() }}/assets/img/favicon.png">
 
     <meta http-equiv="Cache-Control" content="no-cache"/>
     <meta http-equiv="Pragma" content="no-cache"/>
@@ -60,9 +61,10 @@
 <!-- Main container -->
 
 <!-- Scripts -->
-<script src="{{ base_path }}/assets/js/core.min.js"></script>
-<script src="{{ base_path }}/assets/js/app.js"></script>
-<script src="{{ base_path }}/assets/js/script.js"></script>
-
+<script src="{{ base_path() }}/assets/js/core.min.js"></script>
+<script src="{{ base_path() }}/assets/js/app.js"></script>
+<script src="{{ base_path() }}/assets/js/script.js"></script>
+{% block script %}
+{% endblock %}
 </body>
 </html>

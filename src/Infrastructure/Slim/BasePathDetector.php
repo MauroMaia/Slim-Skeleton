@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Infrastructure\Slim\Middleware;
+namespace App\Infrastructure\Slim;
 
 /**
  * A URL base path detector.
@@ -79,8 +79,7 @@ class BasePathDetector
         $scriptName = $server['SCRIPT_NAME'];
 
         $basePath = (string)parse_url($server['REQUEST_URI'], PHP_URL_PATH);
-        $scriptName = str_replace('\\', '/', dirname($scriptName, 2));
-
+        $scriptName = str_replace('\\', '/', dirname($scriptName, 1));
         if ($scriptName === '/') {
             return '';
         }

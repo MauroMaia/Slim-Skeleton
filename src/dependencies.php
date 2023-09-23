@@ -3,8 +3,9 @@
 declare(strict_types=1);
 
 use App\Infrastructure\Persistence\DatabaseConnection;
-use App\Infrastructure\Slim\CsrfExtension;
 use App\Infrastructure\Slim\Handlers\HttpErrorHandler;
+use App\Infrastructure\Twig\Extension\BasePathExtension;
+use App\Infrastructure\Twig\Extension\CsrfExtension;
 use DI\ContainerBuilder;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
@@ -49,17 +50,19 @@ $containerBuilder->addDefinitions(
             return $guard;
         },
 
+
         // Configure Twig
         Environment::class => function (Guard $guard) {
             $loader = new FilesystemLoader(__DIR__ . '/../src/View');
             $twig = new Environment($loader);
             $twig->addGlobal('project_owner_url', PROJECT_OWNER_URL);
             $twig->addGlobal('project_owner_name', PROJECT_OWNER_NAME);
-            $twig->addGlobal('base_path',  rtrim($this->app->getBasePath(), '/'));
+            //$twig->addGlobal('base_path',  rtrim($this->app->getBasePath(), '/'));
             $twig->addGlobal('app_name', APP_NAME);
             $twig->addGlobal('app_description', APP_DESCRIPTION);
 
             $twig->addExtension(new CsrfExtension($guard));
+            $twig->addExtension(new BasePathExtension($guard));
 
             return $twig;
         },

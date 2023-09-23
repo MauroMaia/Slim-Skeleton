@@ -8,6 +8,7 @@ use App\Infrastructure\Slim\Middleware\RequestLoggingMiddleware;
 use App\Infrastructure\Slim\Middleware\SessionMiddleware;
 use Slim\App;
 use Slim\Interfaces\ErrorHandlerInterface;
+use Slim\Views\TwigMiddleware;
 
 /*
  * This middleware will be called in reverse order, so:
@@ -21,9 +22,11 @@ return function (App $app) {
     // Add Routing Middleware
     $app->addRoutingMiddleware();
 
+    $app->addErrorMiddleware(true, true, true);
     $app->add(BasePathMiddleware::class);
     $app->add(SessionMiddleware::class);
     $app->add(NoCacheMiddleware::class);
+
 
     // Add Error Middleware
     $errorMiddleware = $app->addErrorMiddleware(DISPLAY_ERRORS, LOGGER_REGISTER_ERRORS, LOGGER_REGISTER_ERRORS_DETAILS);

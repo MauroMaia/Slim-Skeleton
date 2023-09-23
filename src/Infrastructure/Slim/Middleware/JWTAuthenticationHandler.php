@@ -10,7 +10,7 @@ use Slim\Interfaces\RouteParserInterface;
 use Slim\Psr7\Request;
 use Slim\Psr7\Response;
 
-readonly class JWTAuthenticationHandler
+class JWTAuthenticationHandler
 {
 
     public function __construct(private LoggerInterface $logger, private RouteParserInterface $router)

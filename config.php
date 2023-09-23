@@ -2,19 +2,18 @@
 
 use Monolog\Level;
 
-defined('BASE_PATH')            or define('BASE_PATH', 'slim-skeleton'); // this is automatic for slim but not in one case
-defined('APP_NAME')             or define('APP_NAME', 'slim-skeleton');
-defined('APP_DESCRIPTION')      or define('APP_DESCRIPTION', 'slim-skeleton');
-defined('PROJECT_OWNER_NAME')   or define('PROJECT_OWNER_NAME', 'slim-skeleton');
-defined('PROJECT_OWNER_URL')    or define('PROJECT_OWNER_URL', '');
-defined('PRODUCTION')           or define('PRODUCTION', true);
-defined('APP_LANG')         or define('APP_LANG', 'en');
-defined('APP_KEYWORDS')         or define('APP_KEYWORDS', 'Quinta Cardeal');
+defined('APP_NAME')			or define('APP_NAME', 'slim-skeleton');
+defined('APP_DESCRIPTION')		or define('APP_DESCRIPTION', 'slim-skeleton');
+defined('PROJECT_OWNER_NAME')		or define('PROJECT_OWNER_NAME', 'slim-skeleton');
+defined('PROJECT_OWNER_URL')		or define('PROJECT_OWNER_URL', '');
+defined('PRODUCTION')			or define('PRODUCTION', false);
+defined('APP_LANG')			or define('APP_LANG', 'en');
+defined('APP_KEYWORDS')			or define('APP_KEYWORDS', 'slim skeleton');
 
 
 // SLIM
 // Should be set to false in production
-defined('DISPLAY_ERRORS')   or define('DISPLAY_ERRORS', PRODUCTION);
+defined('DISPLAY_ERRORS')   or define('DISPLAY_ERRORS', false);
 
 // logger
 defined('LOGGER_REGISTER_ERRORS')           or define('LOGGER_REGISTER_ERRORS', true);
@@ -26,27 +25,27 @@ defined('LOGGER_INTERNAL_CONFIGS')          or define('LOGGER_INTERNAL_CONFIGS',
 ]);
 
 // db
-defined('DATABASE_HOST')        or define('DATABASE_HOST', 'db_mysql');
-defined('DATABASE_NAME')        or define('DATABASE_NAME', 'slim');
-defined('DATABASE_USER')        or define('DATABASE_USER', 'root');
-defined('DATABASE_PASSWORD')    or define('DATABASE_PASSWORD', 'password');
-defined('DATABASE_PORT')        or define('DATABASE_PORT', 3306);
+defined('DATABASE_HOST')		or define('DATABASE_HOST', 'db_mysql');
+defined('DATABASE_NAME')		or define('DATABASE_NAME', 'slim');
+defined('DATABASE_USER')		or define('DATABASE_USER', 'root');
+defined('DATABASE_PASSWORD')		or define('DATABASE_PASSWORD', 'password');
+defined('DATABASE_PORT')		or define('DATABASE_PORT', 3306);
 
 // JWT
-defined('ALGORITHM')                or define('ALGORITHM', 'HS256');
-defined('TYPE')                     or define('TYPE', 'JWT');
-defined('ISSUER')                   or define('ISSUER', '127.0.0.1');
-defined('AUDIENCE')                 or define('AUDIENCE', [ISSUER]);
-defined('SECRET')                   or define('SECRET', 'very_secure_password_to_be_store_elsewhere');
-defined('EXPIRATION_TIME_SECONDS')  or define('EXPIRATION_TIME_SECONDS', 2 * 60 * 60); // 2h
-defined('NOT_BEFORE_SECONDS')       or define('NOT_BEFORE_SECONDS', 0);
+defined('ALGORITHM')			or define('ALGORITHM', 'HS256');
+defined('TYPE')				or define('TYPE', 'JWT');
+defined('ISSUER')			or define('ISSUER', '127.0.0.1');
+defined('AUDIENCE')			or define('AUDIENCE', [ISSUER]);
+defined('SECRET')			or define('SECRET', 'very_secure_password_to_be_store_elsewhere');
+defined('EXPIRATION_TIME_SECONDS')	or define('EXPIRATION_TIME_SECONDS', 2 * 60 * 60); // 2h
+defined('NOT_BEFORE_SECONDS')		or define('NOT_BEFORE_SECONDS', 0);
 
 // PHP MAILER
-defined('MAIL_ENABLE')          or define('MAIL_ENABLE', true); // TODO - set this up
-defined('MAIL_FROM')            or define('MAIL_FROM', '');
-defined('MAIL_FROM_PASSWORD')   or define('MAIL_FROM_PASSWORD', '');
-defined('MAIL_SERVER')          or define('MAIL_SERVER', '');
-defined('MAIL_PORT')            or define('MAIL_PORT', 587);
+defined('MAIL_ENABLE')			or define('MAIL_ENABLE', true); // TODO - set this up
+defined('MAIL_FROM')			or define('MAIL_FROM', '');
+defined('MAIL_FROM_PASSWORD')		or define('MAIL_FROM_PASSWORD', '');
+defined('MAIL_SERVER')			or define('MAIL_SERVER', '');
+defined('MAIL_PORT')			or define('MAIL_PORT', 587);
 
 
 function rand_string( $length ): string
