@@ -30,7 +30,7 @@ class AdminController
      */
     public function viewAddUserForm(Request $request, Response $response, Environment $twig): Response|Message
     {
-        $response->getBody()->write($twig->render('admin/add-user.twig', []));
+        $response->getBody()->write($twig->render('pages/admin/add-user.twig', []));
         return $response->withHeader('Content-Type', 'text/html');
     }
 
@@ -43,7 +43,7 @@ class AdminController
     {
         $userList = $this->userRepository->findAll();
 
-        $response->getBody()->write($twig->render('admin/list-users.twig', ["userList" => $userList]));
+        $response->getBody()->write($twig->render('pages/admin/list-users.twig', ["userList" => $userList]));
         return $response->withHeader('Content-Type', 'text/html');
     }
 
