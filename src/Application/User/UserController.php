@@ -38,7 +38,7 @@ class UserController
         $userId = (int)$request->getAttribute('id');
         $user = $this->userRepository->findById($userId);
 
-        $response->getBody()->write($twig->render('admin/edit-user.twig', ["user" => $user]));
+        $response->getBody()->write($twig->render('pages/admin/edit-user.twig', ["user" => $user]));
         return $response->withHeader('Content-Type', 'text/html');
     }
 
