@@ -1,29 +1,71 @@
 {% extends "template.twig" %}
 
 {% block head %}
-
     <title>Dashboard | {{ app_name }}</title>
-
-    <!--  Open Graph Tags -->
-    <meta property="og:title" content="The Slim Template of 2023!">
-    <meta property="og:description"
-          content="This is a responsive, professional, and multipurpose nagios configuration Generator. Fell free to ask
-           for a new feature.">
-    <meta property="og:image" content="assets/img/og-img.jpg">
-    <meta property="og:url" content="index.html">
-    <meta name="twitter:card" content="summary_large_image">
-
     {{ parent() }}
-
 {% endblock %}
 
 
 {% block content %}
-<div class="container">
-    <div class="row">
-        <div class="col-md-12">
-            oi
+    <div class="main-content">
+
+        <div class="row">
+
+
+            <div class="col-md-4">
+                <div class="card card-body">
+                    <div class="flexbox">
+                        <div data-provide="sparkline" data-width="100" data-fill-color="false" data-line-width="2">
+                            1,4,3,7,6,4,8,9,6,8,12
+                        </div>
+                        <div class="text-right">
+                            <span class="fw-400">Fichas de Clientes</span><br>
+                            <span>
+                                <i class="ti-angle-up text-success"></i>
+                                    <span class="fs-18 ml-1">113</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-md-4">
+                <div class="card card-body">
+                    <div class="flexbox">
+                        <div data-provide="sparkline" data-type="bar" data-bar-color="#f2a654">1,4,7,6,4,8,6,12</div>
+                        <div class="text-right">
+                            <span class="fw-400">Fichas de Planeamento</span><br>
+                            <span>
+                                <i class="ti-angle-up text-success"></i>
+                                <span class="fs-18 ml-1">%80</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-md-4">
+                <div class="card card-body">
+                    <div class="flexbox">
+                        <div data-provide="sparkline" data-type="discrete" data-width="50" data-line-color="#926dde">
+                            1,4,3,7,6,4,8,9,6,8,12
+                        </div>
+                        <div class="text-right">
+                            <span class="fw-400">Serviços completos</span><br>
+                            <span>
+                                <i class="ti-angle-up text-success"></i>
+                                <span class="fs-18 ml-1">%80</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
         </div>
-    </div>
-</div>
+
+  </div>
+
 {% endblock %}
