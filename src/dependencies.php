@@ -50,7 +50,6 @@ $containerBuilder->addDefinitions(
             return $guard;
         },
 
-
         // Configure Twig
         Environment::class => function (Guard $guard, App $app) {
             $loader = new FilesystemLoader(__DIR__ . '/../src/View');

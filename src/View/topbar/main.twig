@@ -11,6 +11,7 @@
 
         <ul class="topbar-btns">
             <li class="dropdown">
+                {{ currentUserFirstName }} {{ currentUserLastName }} #{{ currentUserid }}
                 <span class="topbar-btn" data-toggle="dropdown" aria-expanded="false"><img class="avatar" src="{{ base_path() }}/assets/img/avatar/1.jpg" alt="..."></span>
                 <div class="dropdown-menu dropdown-menu-right" x-placement="bottom-end" style="position: absolute; will-change: top, left; top: 65px; left: 60px;">
                     <a class="dropdown-item" href="settings"><i class="ti-settings"></i> Settings</a>
