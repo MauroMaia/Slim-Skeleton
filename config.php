@@ -2,18 +2,19 @@
 
 use Monolog\Level;
 
-defined('APP_NAME')			or define('APP_NAME', 'slim-skeleton');
+defined('PRODUCTION')   or define('PRODUCTION', false);
+
+defined('APP_NAME')			    or define('APP_NAME', 'slim-skeleton');
 defined('APP_DESCRIPTION')		or define('APP_DESCRIPTION', 'slim-skeleton');
-defined('PROJECT_OWNER_NAME')		or define('PROJECT_OWNER_NAME', 'slim-skeleton');
-defined('PROJECT_OWNER_URL')		or define('PROJECT_OWNER_URL', '');
-defined('PRODUCTION')			or define('PRODUCTION', false);
-defined('APP_LANG')			or define('APP_LANG', 'en');
-defined('APP_KEYWORDS')			or define('APP_KEYWORDS', 'slim skeleton');
+defined('PROJECT_OWNER_NAME')   or define('PROJECT_OWNER_NAME', 'slim-skeleton');
+defined('PROJECT_OWNER_URL')    or define('PROJECT_OWNER_URL', '');
+defined('APP_LANG')			    or define('APP_LANG', 'en');
+defined('APP_KEYWORDS')		    or define('APP_KEYWORDS', 'slim skeleton');
 
 
 // SLIM
 // Should be set to false in production
-defined('DISPLAY_ERRORS')   or define('DISPLAY_ERRORS', false);
+defined('DISPLAY_ERRORS')   or define('DISPLAY_ERRORS', !PRODUCTION);
 
 // logger
 defined('LOGGER_REGISTER_ERRORS')           or define('LOGGER_REGISTER_ERRORS', true);
@@ -32,11 +33,11 @@ defined('DATABASE_PASSWORD')		or define('DATABASE_PASSWORD', 'password');
 defined('DATABASE_PORT')		or define('DATABASE_PORT', 3306);
 
 // JWT
-defined('ALGORITHM')			or define('ALGORITHM', 'HS256');
-defined('TYPE')				or define('TYPE', 'JWT');
-defined('ISSUER')			or define('ISSUER', '127.0.0.1');
-defined('AUDIENCE')			or define('AUDIENCE', [ISSUER]);
-defined('SECRET')			or define('SECRET', 'very_secure_password_to_be_store_elsewhere');
+defined('ALGORITHM')			    or define('ALGORITHM', 'HS256');
+defined('TYPE')			            or define('TYPE', 'JWT');
+defined('ISSUER')			        or define('ISSUER', '127.0.0.1');
+defined('AUDIENCE')			        or define('AUDIENCE', [ISSUER]);
+defined('SECRET')			        or define('SECRET', 'very_secure_password_to_be_store_elsewhere');
 defined('EXPIRATION_TIME_SECONDS')	or define('EXPIRATION_TIME_SECONDS', 2 * 60 * 60); // 2h
 defined('NOT_BEFORE_SECONDS')		or define('NOT_BEFORE_SECONDS', 0);
 

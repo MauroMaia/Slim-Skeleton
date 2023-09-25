@@ -189,15 +189,19 @@ readonly class SqlUserRepository implements UserRepository
         return true;
     }
 
-   /* public function getUserPermissions(User $user): bool
+   public function getUserPermissions(User $user): bool
     {
         $result = $this->db->runWithParams(
-            "SELECT MAX(IF(permission = 'ADMIN', 1, 0)) AS admin,
-		                    MAX(IF(permission = 'LIST_USER', 1, 0)) AS list_users,
-		                    MAX(IF(permission = 'EDIT_USER', 1, 0)) AS edit_user
-                    FROM user_permissions
-                    WHERE userid = ?
-                    GROUP BY userid",
+            "SELECT userid,
+               IF(permission = 'ADMIN', up.enabled, 0) AS admin,
+               CASE
+                   WHEN permission = 'ADMIN' THEN up.enabled
+                   WHEN permission = 'LIST_USER' THEN up.enabled
+                   ELSE 0
+               END AS list_user
+            FROM user_permissions up
+            WHERE userid = ?
+            GROUP BY userid",
             [$user->id]
         );
 
@@ -205,6 +209,6 @@ readonly class SqlUserRepository implements UserRepository
             return false;
         }
         return true;
-    }*/
+    }
 
 }
