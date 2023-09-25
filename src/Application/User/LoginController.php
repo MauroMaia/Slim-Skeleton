@@ -164,7 +164,7 @@ class LoginController
             return $response->withStatus(401);
         }
         if (password_verify($password, $user->password)) {
-            $token = new Token($user->getUsername());
+            $token = new Token($user->id);
             $token->encode();
             setcookie("token", $token->token, time() + 3600, empty($this->app->getBasePath()) ? '/' : $this->app->getBasePath());
             return $response->withStatus(301)->withHeader('Location', $router->urlFor('home'));
