@@ -1,0 +1,36 @@
+{% extends "template.twig" %}
+
+{% block head %}
+    <title>List roles | {{ app_name }}</title>
+    {{ parent() }}
+{% endblock %}
+
+
+{% block content %}
+    <div class="main-content">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <h5 class="card-title"><strong>User list</strong></h5>
+
+                    <div class="media-list media-list-hover media-list-divided scrollable" style="height: 345px">
+
+                        {% for role in roles %}
+                            <div>{{ role }}</div>
+                        {% else %}
+                            <div>
+                                No role stored.
+                            </div>
+                        {% endfor %}
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+{% endblock %}
+{% block script %}
+    <script src="{{ base_path() }}/assets/js/admin/list-roles.min.js"></script>
+{% endblock %}

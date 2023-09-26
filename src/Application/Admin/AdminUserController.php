@@ -17,7 +17,7 @@ use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
 
-class AdminController
+class AdminUserController
 {
     use HttpResponse;
 
@@ -81,7 +81,7 @@ class AdminController
                 updatedAt:       null
             )
         );
-        //$this->logger->info("New user added", ["id" => $user->id]);
+
         $this->logger->info("New user added", []);
 
         /*EmailHandler::SendWelcomeEmail(
