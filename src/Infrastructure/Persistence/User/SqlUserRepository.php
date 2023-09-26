@@ -192,16 +192,19 @@ readonly class SqlUserRepository implements UserRepository
    public function getUserPermissions(int $userId): array
     {
         $result = $this->db->runWithParams(
-            "SELECT userid,
-               IF(permission = 'ADMIN', up.enabled, 0) AS admin,
-               CASE
-                   WHEN permission = 'ADMIN' THEN up.enabled
-                   WHEN permission = 'LIST_USER' THEN up.enabled
-                   ELSE 0
-               END AS list_user
-            FROM user_permissions up
-            WHERE userid = ?
-            GROUP BY userid",
+            "
+                SELECT ur.user_id,
+                   IF(permission = 'ADMIN', rp.enabled, 0) AS admin,
+                   CASE
+                       WHEN permission = 'ADMIN' THEN rp.enabled
+                       WHEN permission = 'LIST_USER' THEN rp.enabled
+                       ELSE 0
+                   END AS list_user
+                from  user_role ur
+                inner join role r on ur.role_id = r.id
+                inner join slim.role_permission rp on r.id = rp.role_id
+                       WHERE ur.user_id = ?
+                GROUP BY ur.user_id",
             [$userId]
         );
 
