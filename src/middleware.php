@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
+use App\Infrastructure\Slim\Middleware\AclCheckMiddleware;
 use App\Infrastructure\Slim\Middleware\BasePathMiddleware;
+use App\Infrastructure\Slim\Middleware\JWTAuthenticationHandler;
 use App\Infrastructure\Slim\Middleware\NoCacheMiddleware;
 use App\Infrastructure\Slim\Middleware\RequestLoggingMiddleware;
 use App\Infrastructure\Slim\Middleware\SessionMiddleware;
@@ -18,11 +20,14 @@ return function (App $app) {
     // Add Body Parsing Middleware
     $app->addBodyParsingMiddleware();
 
+    $app->add(AclCheckMiddleware::class);
+
     // Add Routing Middleware
     $app->addRoutingMiddleware();
 
     $app->add(BasePathMiddleware::class);
     $app->add(SessionMiddleware::class);
+    $app->add(JWTAuthenticationHandler::class);
     $app->add(NoCacheMiddleware::class);
 
 

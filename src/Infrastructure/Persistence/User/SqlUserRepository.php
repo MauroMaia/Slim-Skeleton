@@ -189,7 +189,7 @@ readonly class SqlUserRepository implements UserRepository
         return true;
     }
 
-   public function getUserPermissions(User $user): bool
+   public function getUserPermissions(int $userId): array
     {
         $result = $this->db->runWithParams(
             "SELECT userid,
@@ -202,13 +202,12 @@ readonly class SqlUserRepository implements UserRepository
             FROM user_permissions up
             WHERE userid = ?
             GROUP BY userid",
-            [$user->id]
+            [$userId]
         );
 
-        if (!isset($result[0])) {
-            return false;
-        }
-        return true;
+        $result[0]['guest'] = 1;
+
+        return $result[0];
     }
 
 }

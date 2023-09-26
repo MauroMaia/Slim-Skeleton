@@ -43,4 +43,5 @@ interface UserRepository
 
     public function delete(int $userId):bool;
 
+    public function getUserPermissions(int $userId): array;
 }

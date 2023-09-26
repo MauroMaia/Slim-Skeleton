@@ -5,7 +5,6 @@ declare(strict_types=1);
 use App\Application\Admin\AdminController;
 use App\Application\User\UserController;
 use App\Application\User\LoginController;
-use App\Infrastructure\Slim\Middleware\JWTAuthenticationHandler;
 use App\Infrastructure\Slim\Middleware\NoCacheMiddleware;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -65,8 +64,7 @@ return function (App $app) {
     $app->group('/logout', function (RouteCollectorProxy $group) {
         $group->get('', [LoginController::class, 'doLogout'])->setName('doLogout');
         $group->post('', [LoginController::class, 'doLogout'])->setName('doLogout');
-    })->add(NoCacheMiddleware::class)
-        ->add(JWTAuthenticationHandler::class);
+    })->add(NoCacheMiddleware::class);
 
     $app->group('/app', function (RouteCollectorProxy $group) {
 
@@ -83,7 +81,8 @@ return function (App $app) {
                       ->setName('viewAddUserForm');
 
                 $group->get('/list', [AdminController::class, 'viewUsersList'])
-                      ->setName('viewUsersList');
+                      ->setName('viewUsersList')
+                ->setArgument('permission','admin' );
 
             });
 
@@ -95,8 +94,7 @@ return function (App $app) {
         $group->get('/profile/{id}', [UserController::class, 'viewUserProfile'])
               ->setName('viewUserProfile');
 
-    })->add(Guard::class)
-      ->add(JWTAuthenticationHandler::class);
+    })->add(Guard::class);
 
     /*
      * API - NO-AUTHENTICATION
@@ -118,6 +116,5 @@ return function (App $app) {
 
         $group->delete('/admin/user/{id}', [UserController::class, 'deleteUserProfile'])->setName('deleteUserProfile');
 
-    })->add(JWTAuthenticationHandler::class)
-        ->add(NoCacheMiddleware::class);
+    })->add(NoCacheMiddleware::class);
 };
