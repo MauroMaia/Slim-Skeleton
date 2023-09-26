@@ -38,22 +38,25 @@ readonly class JWTAuthenticationHandler
 
         $token = $request->getCookieParams()['token'] ?? null;
 
-        try {
-            $token = new Token(token: $token);
-            $token->decode();
+        if ($token)
+        {
+            try {
+                $token = new Token(token: $token);
+                $token->decode();
 
-            $user = $this->userRepository->findById((int)$token->subject);
+                $user = $this->userRepository->findById((int)$token->subject);
 
-            $request = $request->withAttribute('user', $user);
+                $request = $request->withAttribute('user', $user);
 
-            $this->twig->addGlobal('currentUserFirstName',$user->getFirstName());
-            $this->twig->addGlobal('currentUserLastName',$user->getLastName());
-            $this->twig->addGlobal('currentUserid',$user->id);
-        }
-        catch (SignatureInvalidException|\TypeError|UserNotFoundException $ignored) {
-            $this->logger->warning("Invalid user authentication", ['exception-message' => $ignored->getMessage()]);
-            $response = new Response();
-            return $response->withStatus(301)->withHeader('Location', $this->router->urlFor('viewLoginAuth'));
+                $this->twig->addGlobal('currentUserFirstName', $user->getFirstName());
+                $this->twig->addGlobal('currentUserLastName', $user->getLastName());
+                $this->twig->addGlobal('currentUserid', $user->id);
+            } catch (SignatureInvalidException|\TypeError|UserNotFoundException $ignored) {
+                $this->logger->warning("Invalid user authentication", ['exception-message' => $ignored->getMessage()]);
+                $response = new Response();
+                return $response->withStatus(301)
+                    ->withHeader('Location', $this->router->urlFor('viewLoginAuth'));
+            }
         }
 
         return $handler->handle($request);
