@@ -4,7 +4,7 @@ namespace App\Application\Admin;
 
 
 use App\Domain\Role\Permissions;
-use App\Domain\User\UserRepository;
+use App\Domain\Role\RoleRepository;
 use App\Infrastructure\Slim\HttpResponse;
 use Psr\Log\LoggerInterface;
 use Slim\Psr7\Message;
@@ -19,7 +19,7 @@ class AdminRoleController
 {
     use HttpResponse;
 
-    public function __construct(public LoggerInterface $logger, public UserRepository $userRepository) { }
+    public function __construct(public LoggerInterface $logger, public RoleRepository $roleRepository) { }
 
 
 
@@ -37,7 +37,15 @@ class AdminRoleController
         return $response->withHeader('Content-Type', 'text/html');
     }
 
+    public function apiRolesList(Request $request, Response $response): Response|Message
+    {
+        $roles=$this->roleRepository->findAll();
 
-
+        $response->getBody()->write(json_encode((object)[
+            "permissions"=>array_column(Permissions::cases(), 'name'),
+            "roles" => $roles
+        ]));
+        return $response->withHeader('Content-Type', 'text/html');
+    }
 }
 

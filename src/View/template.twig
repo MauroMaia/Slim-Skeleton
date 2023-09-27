@@ -25,6 +25,10 @@
     <meta http-equiv="Pragma" content="no-cache"/>
     <meta http-equiv="Expires" content="0" />
 
+    <!-- js grid-->
+    <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.css" />
+    <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid-theme.min.css" />
+
     {% block head %} {% endblock %}
 </head>
 
@@ -63,6 +67,9 @@
 <script src="{{ base_path() }}/assets/js/core.min.js"></script>
 <script src="{{ base_path() }}/assets/js/app.js"></script>
 <script src="{{ base_path() }}/assets/js/script.js"></script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.js"></script>
+
 {% block script %}
 {% endblock %}
 </body>
