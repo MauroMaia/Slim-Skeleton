@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Persistence\Role;
 
+use App\Domain\Role\Role;
 use App\Domain\Role\RoleRepository;
-use App\Domain\User\User;
 use App\Infrastructure\Persistence\DatabaseConnection;
 use Exception;
 
@@ -24,23 +24,36 @@ readonly class SqlRoleRepository implements RoleRepository
      */
     public function findAll(): array
     {
-        $result = $this->db->runWithParams("SELECT * FROM user;", []);
+        $result = $this->db->runWithParams(
+            "SELECT * from role r
+                        left join slim.role_permission rp on r.id = rp.role_id
+                        where rp.enabled = true || rp.enabled is null", []);
 
-        foreach ($result as $index => $line) {
-            $result[$index] = new User(
-                $line['id'],
-                $line['username'],
-                $line['firstName'],
-                $line['lastName'],
-                $line['password'],
-                $line['recoverPassword'],
-                $line['email'],
-                $line['jobTitle'],
-                new \DateTime($line['created_at']),
-                new \DateTime($line['updated_at'])
-            );
+        $roles =[];
+
+        foreach ($result as $index => $line)
+        {
+            //continue;
+            if(!array_key_exists($line['id'], $roles))
+            {
+                $roles[$line['id']] = new Role(
+                    $line['id'],
+                    $line['name'],
+                    [$line['permission']],
+                    is_null($line['created_at'])?new \DateTime():new \DateTime($line['created_at']),
+                    is_null($line['updated_at'])?new \DateTime():new \DateTime($line['updated_at']),
+                );
+            }else{
+                $roles[$line['id']] = new Role(
+                    $line['id'],
+                    $line['name'],
+                    array_merge($roles[$line['id']]->permissions,[$line['permission']]),
+                    new \DateTime($line['created_at']),
+                    new \DateTime($line['updated_at'])
+                );
+            }
         }
-        return $result;
+        return array_values($roles);
     }
 
 

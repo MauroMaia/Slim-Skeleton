@@ -126,5 +126,10 @@ return function (App $app) {
             ->setName('deleteUserProfile')
             ->setArgument('permission', Permissions::ADMIN->value );
 
+        $group->group('/roles', function (RouteCollectorProxy $group) {
+            $group->get('/list', [AdminRoleController::class, 'apiRolesList'])
+                ->setArgument('permission', Permissions::ADMIN->value );
+        });
+
     })->add(NoCacheMiddleware::class);
 };

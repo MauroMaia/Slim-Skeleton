@@ -11,6 +11,7 @@ readonly class Role implements JsonSerializable
     public function __construct(
         public ?int       $id,
         public string     $name,
+        public array $permissions,
         public ?\DateTime $createdAt,
         public ?\DateTime $updatedAt) { }
 
@@ -19,7 +20,8 @@ readonly class Role implements JsonSerializable
     {
         return [
             'id' => $this->id,
-            'username' => $this->name,
+            'name' => $this->name,
+            'permissions' => $this->permissions,
             'createdAt' => $this->createdAt->format(\DateTime::ATOM),
             'updatedAt' => $this->updatedAt->format(\DateTime::ATOM),
         ];
