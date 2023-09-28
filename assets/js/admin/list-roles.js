@@ -1,12 +1,12 @@
 
 fetch( "api/roles/list", {
-	method: 'GET',
-	credentials: 'same-origin', // Include cookies when making the request
+	method: "GET",
+	credentials: "same-origin", // Include cookies when making the request
 } )
 	.then(response => response.json())
 	.then( function ( response )
 	{
-		console.log("response ", response)
+		//console.log("response ", response)
 
 		let fields =[ ]
 
@@ -46,7 +46,7 @@ fetch( "api/roles/list", {
 				}
 			].concat(fields).concat([{ type: "control" }]),
 
-		});
-	} )
+		})
+	})
 
 
