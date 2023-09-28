@@ -3,7 +3,7 @@ module.exports = function(grunt) {
   'use strict';
 
   const autoprefixer = require('autoprefixer')({
-    browsers: [
+    overrideBrowserslist: [
       'Chrome >= 45',
       'Firefox >= 40',
       'Edge >= 12',
