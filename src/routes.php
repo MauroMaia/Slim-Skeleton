@@ -127,7 +127,17 @@ return function (App $app) {
             ->setArgument('permission', Permissions::ADMIN->value );
 
         $group->group('/roles', function (RouteCollectorProxy $group) {
+
             $group->get('/list', [AdminRoleController::class, 'apiRolesList'])
+                ->setArgument('permission', Permissions::ADMIN->value );
+
+            $group->put('/', [AdminRoleController::class, 'apiCreateRole'])
+                ->setArgument('permission', Permissions::ADMIN->value );
+
+            $group->post('/{id}', [AdminRoleController::class, 'apiUpdateRole'])
+                ->setArgument('permission', Permissions::ADMIN->value );
+
+            $group->delete('/{id}', [AdminRoleController::class, 'apiDeleteRole'])
                 ->setArgument('permission', Permissions::ADMIN->value );
         });
 
