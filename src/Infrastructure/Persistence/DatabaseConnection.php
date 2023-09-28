@@ -46,4 +46,13 @@ class DatabaseConnection
         $stmt->execute($array);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function insert(string $query, $array = []): false|string
+    {
+        $this->logger->debug("Run query: " . $query, ['args'=>$array]);
+
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute($array);
+        return $this->conn->lastInsertId();
+    }
 }

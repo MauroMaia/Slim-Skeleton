@@ -51,7 +51,7 @@ create table if not exists role_permission
 );
 
 insert into role(name)
-values ('ADMIN'), ('READ_ONLY'),('GUEST');
+values ('ADMIN'), ('GUEST'), ('READ_ONLY'), ('OPERATOR');
 
 insert into user(id, username, firstName, lastName, email, password, jobTitle)
 VALUES (1,'admin', 'Admin', 'God', '',
@@ -62,7 +62,11 @@ insert into user_role(user_id, role_id)
 values (1, 1);
 
 insert into role_permission(permission, role_id,enabled)
-values ('ADMIN', 1, true);
+values ('admin', 1, true);
+insert into role_permission(permission, role_id,enabled)
+values ('guest', 2, true);
+insert into role_permission(permission, role_id,enabled)
+values ('read_only', 3, true);
 
 create index user_email_index       on user(email);
 create index user_username_index    on user(username);
