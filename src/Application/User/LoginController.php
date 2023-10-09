@@ -146,9 +146,6 @@ class LoginController
         }
     }
 
-    /**
-     * @throws UserNotFoundException
-     */
     public function doLoginValidate(Request $request, Response $response, RouteParserInterface $router)
     {
         $username = $request->getParsedBody()['username'];
@@ -158,11 +155,12 @@ class LoginController
         {
             $user = $this->userRepository->findByUsername($username);
         }
-        catch (UserNotFoundException $e)
+        catch (UserNotFoundException)
         {
             $this->logger->warning("Invalid login user password");
             return $response->withStatus(401);
         }
+
         if (password_verify($password, $user->password)) {
             $token = new Token($user->id);
             $token->encode();

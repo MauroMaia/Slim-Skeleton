@@ -17,11 +17,14 @@ use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
 
-class AdminUserController
+class UserManagementController
 {
     use HttpResponse;
 
-    public function __construct(public LoggerInterface $logger, public UserRepository $userRepository) { }
+    public function __construct(
+        public LoggerInterface $logger,
+        public UserRepository $userRepository
+    ) { }
 
     /**
      * @throws RuntimeError
@@ -61,9 +64,7 @@ class AdminUserController
         try {
             $this->userRepository->findByEmail($email);
             throw new InvalidArgumentException("User Already exist");
-        } catch (UserNotFoundException $ignore) {
-        }
-
+        } catch (UserNotFoundException $ignore) { }
 
         $passwordHash = password_hash($password, null);
 
@@ -90,9 +91,21 @@ class AdminUserController
             $twig
         );*/
 
-
         return $response->withStatus(301)->withHeader('Location', $router->urlFor('viewUsersList'));
     }
 
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @return Response|Message
+     */
+    public function deleteUser(Request $request, Response $response): Response|Message
+    {
+        $userId = (int)$request->getAttribute('id');
+        if($this->userRepository->delete($userId)){
+            return $response->withStatus(200);
+        }
+        return $response->withStatus(400);
+    }
 }
 
