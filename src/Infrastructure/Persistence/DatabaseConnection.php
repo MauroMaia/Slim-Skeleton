@@ -40,7 +40,7 @@ class DatabaseConnection
 
     public function runWithParams(string $query, $array = []): array|false
     {
-        $this->logger->debug("Run query: " . $query);
+        $this->logger->debug("Run query: " . $query, ['args'=>$array]);
 
         $stmt = $this->conn->prepare($query);
         $stmt->execute($array);

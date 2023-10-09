@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-use App\Application\Admin\AdminRoleController;
-use App\Application\Admin\AdminUserController;
+use App\Application\Admin\RoleManagementController;
+use App\Application\Admin\UserManagementController;
+use App\Application\Dashboard\GenericController;
 use App\Application\User\UserController;
 use App\Application\User\LoginController;
 use App\Domain\Role\Permissions;
-use App\Infrastructure\Slim\Middleware\NoCacheMiddleware;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\App;
@@ -48,6 +48,9 @@ return function (App $app) {
     /*
      * NO-AUTHENTICATION
      */
+    $app->map(['GET', 'POST'],'/logout', [LoginController::class, 'doLogout'])
+        ->setName('doLogout');
+
     $app->group('/login', function (RouteCollectorProxy $group)
     {
         $group->get('', [LoginController::class, 'viewLoginAuth'])
@@ -59,51 +62,50 @@ return function (App $app) {
         $group->get('/recover/{id}/{recoverPassword}', [LoginController::class, 'viewLoginReset'])
             ->setName('viewLoginReset');
 
-        //$group->post('/signup', [LoginController::class, 'getSignupPage'])
-        //      ->setName('doLoginReset');
+        //$group->post('/signup', [LoginController::class, 'viewSignupPage'])
+        //      ->setName('viewSignupPage');
     })->add(Guard::class);
-
-    $app->group('/logout', function (RouteCollectorProxy $group) {
-        $group->get('', [LoginController::class, 'doLogout'])
-            ->setName('doLogout');
-        $group->post('', [LoginController::class, 'doLogout'])
-            ->setName('doLogout');
-    })->add(NoCacheMiddleware::class);
 
     $app->group('/app', function (RouteCollectorProxy $group) {
 
-        $group->get('', function (Request $request, Response $response, Environment $twig) {
-            $response->getBody()->write($twig->render('dashboard.twig'));
-            return $response->withHeader('Content-Type', 'text/html');
-        })->setName('home');
+        $group->get('', [GenericController::class, 'viewDashboard'])
+            ->setName('home')
+            ->setArgument('permission',Permissions::READ_ONLY->value );
 
         $group->group('/admin', function (RouteCollectorProxy $group)
         {
+            /*
+             *  USER
+             */
+
             $group->group('/users', function (RouteCollectorProxy $group)
             {
-                $group->get('/add', [AdminUserController::class, 'viewAddUserForm'])
+                $group->get('/add', [UserManagementController::class, 'viewAddUserForm'])
                     ->setName('viewAddUserForm')
-                    ->setArgument('permission',Permissions::ADMIN->value);
+                    ->setArgument('permission',Permissions::USER_MANAGEMENT->value);
 
-                $group->get('/list', [AdminUserController::class, 'viewUsersList'])
+                $group->get('/list', [UserManagementController::class, 'viewUsersList'])
                     ->setName('viewUsersList')
-                    ->setArgument('permission', Permissions::ADMIN->value );
-            });
-
-            $group->group('/role', function (RouteCollectorProxy $group)
-            {
-                $group->get('/list', [AdminRoleController::class, 'viewRoleList'])
-                    ->setName('viewUsersList')
-                    ->setArgument('permission',Permissions::ADMIN->value );
+                    ->setArgument('permission', Permissions::USER_MANAGEMENT->value );
             });
 
             $group->get('/user/{id}', [UserController::class, 'viewUserProfile'])
                 ->setName('viewAnotherUserProfile')
-                ->setArgument('permission',Permissions::ADMIN->value );
+                ->setArgument('permission',Permissions::USER_MANAGEMENT->value );
+            /*
+             *  ROLE
+             */
+            $group->group('/role', function (RouteCollectorProxy $group)
+            {
+                $group->get('/list', [RoleManagementController::class, 'viewRoleList'])
+                    ->setName('viewUsersList')
+                    ->setArgument('permission',Permissions::USER_MANAGEMENT->value );
+            });
         });
 
         $group->get('/profile/{id}', [UserController::class, 'viewUserProfile'])
-              ->setName('viewUserProfile');
+            ->setName('viewUserProfile')
+            ->setArgument('permission',Permissions::READ_ONLY->value );
 
     })->add(Guard::class);
 
@@ -119,27 +121,27 @@ return function (App $app) {
             ->setName('doLoginReset');
 
         $group->group('/users', function (RouteCollectorProxy $group) {
-            $group->post('', [AdminUserController::class, 'addUser']);
+            $group->post('', [UserManagementController::class, 'addUser'])
+                ->setArgument('permission', Permissions::ADMIN->value );
         });
 
-        $group->delete('/admin/user/{id}', [UserController::class, 'deleteUserProfile'])
-            ->setName('deleteUserProfile')
+        $group->delete('/admin/user/{id}', [UserManagementController::class, 'deleteUser'])
+            ->setName('deleteUser')
             ->setArgument('permission', Permissions::ADMIN->value );
 
         $group->group('/roles', function (RouteCollectorProxy $group) {
 
-            $group->get('/list', [AdminRoleController::class, 'apiRolesList'])
+            $group->get('/list', [RoleManagementController::class, 'apiRolesList'])
                 ->setArgument('permission', Permissions::ADMIN->value );
 
-            $group->put('/', [AdminRoleController::class, 'apiCreateRole'])
+            $group->put('/', [RoleManagementController::class, 'apiCreateRole'])
                 ->setArgument('permission', Permissions::ADMIN->value );
 
-            $group->post('/{id}', [AdminRoleController::class, 'apiUpdateRole'])
+            $group->post('/{id}', [RoleManagementController::class, 'apiUpdateRole'])
                 ->setArgument('permission', Permissions::ADMIN->value );
 
-            $group->delete('/{id}', [AdminRoleController::class, 'apiDeleteRole'])
+            $group->delete('/{id}', [RoleManagementController::class, 'apiDeleteRole'])
                 ->setArgument('permission', Permissions::ADMIN->value );
         });
-
-    })->add(NoCacheMiddleware::class);
+    });
 };

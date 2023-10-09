@@ -16,13 +16,11 @@ use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
 
-class AdminRoleController
+class RoleManagementController
 {
     use HttpResponse;
 
     public function __construct(public LoggerInterface $logger, public RoleRepository $roleRepository) { }
-
-
 
     /**
      * @throws RuntimeError
@@ -38,6 +36,11 @@ class AdminRoleController
         return $response->withHeader('Content-Type', 'text/html');
     }
 
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @return Response|Message
+     */
     public function apiRolesList(Request $request, Response $response): Response|Message
     {
         $roles = $this->roleRepository->findAll();
