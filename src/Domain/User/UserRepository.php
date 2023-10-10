@@ -39,7 +39,7 @@ interface UserRepository
 
     public function updateUserRecoverPassword(User $user, string $newHash): bool;
 
-    public function add(User $user): bool;
+    public function add(User $user): User;
 
     public function delete(int $userId):bool;
 

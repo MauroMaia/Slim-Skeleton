@@ -9,6 +9,7 @@ use App\Domain\User\UserNotFoundException;
 use App\Domain\User\UserRepository;
 use App\Infrastructure\Persistence\DatabaseConnection;
 use Exception;
+use http\Exception\InvalidArgumentException;
 
 readonly class SqlUserRepository implements UserRepository
 {
@@ -21,12 +22,12 @@ readonly class SqlUserRepository implements UserRepository
     /**
      * @param User $user
      *
-     * @return true
-     * @throws Exception
+     * @return User
+     * @throws InvalidArgumentException
      */
-    public function add(User $user): bool
+    public function add(User $user): User
     {
-        $result = $this->db->runWithParams(
+        $result = $this->db->insert(
             "INSERT INTO user(username, firstName, lastName, email, password, jobTitle) values (?,?,?,?,?,?);",
             [
                 $user->getUsername(),
@@ -37,23 +38,20 @@ readonly class SqlUserRepository implements UserRepository
                 $user->jobTitle
             ]);
 
-        return true;
-        /*if (!isset($result[0])) {
-            throw new UserNotFoundException();
-        }
+        if (!isset($result[0])) throw new InvalidArgumentException("Failed to insert user");
 
-        return new User(
-            $result[0]['id'],
-            $result[0]['username'],
-            $result[0]['firstName'],
-            $result[0]['lastName'],
-            $result[0]['password'],
-            $result[0]['recoverPassword'],
-            $result[0]['email'],
-            $result[0]['jobTitle'],
-            new \DateTime($result[0]['created_at']),
-            new \DateTime($result[0]['updated_at']),
-        );*/
+        $user->id = (int)$result;
+
+        $result = $this->db->insert(
+            "INSERT INTO user_role(user_id, role_id) values (?,?);",
+            [
+                $user->id,
+                $user->roleId
+            ]);
+
+        if ($result === false) throw new InvalidArgumentException("Failed to insert user role");
+
+        return $user;
     }
 
     /**
@@ -62,7 +60,12 @@ readonly class SqlUserRepository implements UserRepository
      */
     public function findAll(): array
     {
-        $result = $this->db->runWithParams("SELECT * FROM user;", []);
+        $result = $this->db->runWithParams(
+            "SELECT user.*, user_role.role_id  
+                FROM user
+                    INNER JOIN user_role ON user.id = user_role.user_id;",
+            []
+        );
 
         foreach ($result as $index => $line) {
             $result[$index] = new User(
@@ -74,6 +77,7 @@ readonly class SqlUserRepository implements UserRepository
                 $line['recoverPassword'],
                 $line['email'],
                 $line['jobTitle'],
+                $line['role_id'],
                 new \DateTime($line['created_at']),
                 new \DateTime($line['updated_at'])
             );
@@ -87,11 +91,15 @@ readonly class SqlUserRepository implements UserRepository
      */
     public function findById(int $id): User
     {
-        $result = $this->db->runWithParams("SELECT * FROM user WHERE id = ?;", [$id]);
+        $result = $this->db->runWithParams(
+            "SELECT user.*, user_role.role_id 
+                        FROM user
+                            INNER JOIN user_role ON user.id = user_role.user_id
+                    WHERE user.id = ?;",
+            [$id]
+        );
 
-        if (!isset($result[0])) {
-            throw new UserNotFoundException();
-        }
+        if ($result === false || !isset($result[0])) throw new UserNotFoundException();
 
         return new User(
             $result[0]['id'],
@@ -102,6 +110,7 @@ readonly class SqlUserRepository implements UserRepository
             $result[0]['recoverPassword'],
             $result[0]['email'],
             $result[0]['jobTitle'],
+            $result[0]['role_id'],
             new \DateTime($result[0]['created_at']),
             new \DateTime($result[0]['updated_at']),
         );
@@ -113,11 +122,15 @@ readonly class SqlUserRepository implements UserRepository
      */
     public function findByUsername(string $username): User
     {
-        $result = $this->db->runWithParams("SELECT * FROM user WHERE username = ? limit 1;", [$username]);
+        $result = $this->db->runWithParams(
+            "SELECT user.*, user_role.role_id  
+                FROM user 
+                    INNER JOIN user_role ON user.id = user_role.user_id
+            WHERE username = ? LIMIT 1;",
+            [$username]
+        );
 
-        if (!isset($result[0])) {
-            throw new UserNotFoundException();
-        }
+        if (!isset($result[0])) throw new UserNotFoundException();
 
         return new User(
             $result[0]['id'],
@@ -128,6 +141,7 @@ readonly class SqlUserRepository implements UserRepository
             $result[0]['recoverPassword'],
             $result[0]['email'],
             $result[0]['jobTitle'],
+            $result[0]['role_id'],
             new \DateTime($result[0]['created_at']),
             new \DateTime($result[0]['updated_at']),
         );
@@ -135,11 +149,15 @@ readonly class SqlUserRepository implements UserRepository
 
     public function findByEmail(string $email): User
     {
-        $result = $this->db->runWithParams("SELECT * FROM user where email = ? limit 1;", [$email]);
+        $result = $this->db->runWithParams(
+            "SELECT user.*, user_role.role_id  
+                FROM user 
+                    INNER JOIN user_role ON user.id = user_role.user_id
+         where email = ? LIMIT 1;",
+            [$email]
+        );
 
-        if (!isset($result[0])) {
-            throw new UserNotFoundException();
-        }
+        if (!isset($result[0])) throw new UserNotFoundException();
 
         return new User(
             $result[0]['id'],
@@ -150,6 +168,7 @@ readonly class SqlUserRepository implements UserRepository
             $result[0]['recoverPassword'],
             $result[0]['email'],
             $result[0]['jobTitle'],
+            $result[0]['role_id'],
             new \DateTime($result[0]['created_at']),
             new \DateTime($result[0]['updated_at']),
         );
@@ -157,36 +176,41 @@ readonly class SqlUserRepository implements UserRepository
 
     public function updateUserPassword(User $user, string $newHash): bool
     {
-        $result = $this->db->runWithParams("update user set password = ? WHERE id = ?;", [$newHash, $user->id]);
+        $result = $this->db->runWithParams(
+            "UPDATE user SET password = ? WHERE id = ?;",
+            [$newHash, $user->id]
+        );
 
-        if (!isset($result[0])) {
-            return false;
-        }
+        if ($result === false) return false;
+
         return true;
     }
 
     public function updateUserRecoverPassword(User $user, string $newHash): bool
     {
         $result = $this->db->runWithParams(
-            "update user set recoverPassword = ?, password = '' where id = ?;",
+            "UPDATE user SET recoverPassword = ?, password = '' WHERE id = ?;",
             [
                 $newHash,
                 $user->id
             ]
         );
 
-        if (!isset($result[0])) {
-            return false;
-        }
+        if (!isset($result[0])) return false;
+
         return true;
     }
 
     public function delete(int $userId): bool
     {
         if($userId == 1) return false;
-        $result = $this->db->runWithParams("DELETE FROM user WHERE id = ?;", [$userId]);
 
-        return true;
+        $result = $this->db->runWithParams(
+            "DELETE FROM user WHERE id = ?;",
+            [$userId]
+        );
+
+        return $result !== false;
     }
 
    public function getUserPermissions(int $userId): array

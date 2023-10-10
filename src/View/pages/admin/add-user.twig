@@ -32,16 +32,31 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group">
-                                    <label class="text-fader">Email</label>
-                                    <input class="form-control" type="email" name="email" id="email">
+                                <div class="row">
+                                    <div class="form-group col-md-6">
+                                        <label class="text-fader">Email</label>
+                                        <input class="form-control" type="email" name="email" id="email">
+                                    </div>
+
+                                    <div class="form-group col-md-6">
+                                        <label for="role" class="text-fader">Role</label>
+                                        <select class="form-control" id="role" name="role">
+                                            {% for role in roles %}
+                                                {%  if role.id == 3 %}
+                                                    <option value="{{ role.id }}" selected>{{ role.name }}</option>
+                                                {% else %}
+                                                    <option value="{{ role.id }}">{{ role.name }}</option>
+                                                {%  endif %}
+                                            {% endfor %}
+                                        </select>
+                                    </div>
                                 </div>
 
                                 <br>
                                 <h5 class="text-light fw-100">&nbsp;</h5>
                                 <br>
 
-                                <h5 class="text-light fw-400">Change Password</h5>
+                                <h5 class="text-light fw-400">Set Password</h5>
                                 <br>
 
                                 <div class="form-group">

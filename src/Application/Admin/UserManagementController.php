@@ -2,6 +2,7 @@
 
 namespace App\Application\Admin;
 
+use App\Domain\Role\RoleRepository;
 use App\Domain\User\User;
 use App\Domain\User\UserNotFoundException;
 use App\Domain\User\UserRepository;
@@ -22,8 +23,9 @@ class UserManagementController
     use HttpResponse;
 
     public function __construct(
-        public LoggerInterface $logger,
-        public UserRepository $userRepository
+        private readonly LoggerInterface $logger,
+        private readonly UserRepository  $userRepository,
+        private readonly RoleRepository  $roleRepository
     ) { }
 
     /**
@@ -33,7 +35,9 @@ class UserManagementController
      */
     public function viewAddUserForm(Request $request, Response $response, Environment $twig): Response|Message
     {
-        $response->getBody()->write($twig->render('pages/admin/add-user.twig', []));
+        $response->getBody()->write($twig->render('pages/admin/add-user.twig', [
+            "roles"=> $this->roleRepository->findAll(),
+        ]));
         return $response->withHeader('Content-Type', 'text/html');
     }
 
@@ -46,44 +50,47 @@ class UserManagementController
     {
         $userList = $this->userRepository->findAll();
 
-        $response->getBody()->write($twig->render('pages/admin/list-users.twig', ["userList" => $userList]));
+        $response->getBody()->write($twig->render('pages/admin/list-users.twig',
+            [
+                "userList" => $userList
+            ])
+        );
         return $response->withHeader('Content-Type', 'text/html');
     }
 
 
     public function addUser(Request              $request,
                             Response             $response,
-                            Environment          $twig,
                             RouteParserInterface $router): Response|Message
     {
         $firstName = $request->getParsedBody()['firstName'];
         $lastName = $request->getParsedBody()['lastName'];
-        $email = $request->getParsedBody()['email'];
         $password = $request->getParsedBody()['password'];
 
-        try {
-            $this->userRepository->findByEmail($email);
-            throw new InvalidArgumentException("User Already exist");
-        } catch (UserNotFoundException $ignore) { }
-
-        $passwordHash = password_hash($password, null);
-
-        $user = $this->userRepository->add(
-            new User(
-                id:              -1,
-                username:        $firstName . '.' . $lastName,
-                firstName:       $firstName,
-                lastName:        $lastName,
-                password:        $passwordHash,
-                recoverPassword: '',
-                email:           $email,
-                jobTitle:        '',
-                createdAt:       null,
-                updatedAt:       null
-            )
+        $user = new User(
+            id:              -1,
+            username:        $firstName . '.' . $lastName,
+            firstName:       $firstName,
+            lastName:        $lastName,
+            password:        password_hash($password, null),
+            recoverPassword: '',
+            email:           $request->getParsedBody()['email'],
+            jobTitle:        '',
+            roleId:          $request->getParsedBody()['role']
         );
 
-        $this->logger->info("New user added", []);
+        // check if user already exist in the database
+        try {
+            // FIXME - join this two validation in one query
+            $this->userRepository->findByEmail($user->email);
+            $this->userRepository->findByUsername($user->getUsername());
+
+            throw new InvalidArgumentException("User Already exist");
+        } catch (UserNotFoundException) { }
+
+        $user = $this->userRepository->add($user);
+
+        $this->logger->info("New user added", ["user" => $user]);
 
         /*EmailHandler::SendWelcomeEmail(
             $user,

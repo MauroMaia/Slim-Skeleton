@@ -44,7 +44,9 @@ class DatabaseConnection
 
         $stmt = $this->conn->prepare($query);
         $stmt->execute($array);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmt->closeCursor();
+        return $results;
     }
 
     public function insert(string $query, $array = []): false|string
@@ -53,6 +55,7 @@ class DatabaseConnection
 
         $stmt = $this->conn->prepare($query);
         $stmt->execute($array);
+        $stmt->closeCursor();
         return $this->conn->lastInsertId();
     }
 }
