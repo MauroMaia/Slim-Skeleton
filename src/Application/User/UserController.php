@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Application\User;
 
+use App\Domain\Role\RoleRepository;
 use App\Domain\User\UserNotFoundException;
 use App\Domain\User\UserRepository;
 use App\Infrastructure\Slim\HttpResponse;
@@ -20,7 +21,11 @@ class UserController
 {
     use HttpResponse;
 
-    public function __construct(public LoggerInterface $logger, public UserRepository $userRepository) { }
+    public function __construct(
+        private readonly LoggerInterface $logger,
+        private readonly UserRepository  $userRepository,
+        private readonly RoleRepository $roleRepository
+    ) { }
 
     /**
      * @param Request     $request
@@ -38,7 +43,11 @@ class UserController
         $userId = (int)$request->getAttribute('id');
         $user = $this->userRepository->findById($userId);
 
-        $response->getBody()->write($twig->render('pages/admin/edit-user.twig', ["user" => $user]));
+        $response->getBody()->write($twig->render('pages/admin/edit-user.twig', [
+            "user" => $user,
+            "roles"=> $this->roleRepository->findAll(),
+            "user_role"=> $this->roleRepository->find($user->roleId),
+        ]));
         return $response->withHeader('Content-Type', 'text/html');
     }
 }

@@ -15,7 +15,7 @@ class User implements JsonSerializable
     private string $lastName;
 
     public function __construct(
-        public readonly ?int       $id,
+        public          ?int       $id,
         string                     $username,
         string                     $firstName,
         string                     $lastName,
@@ -23,8 +23,9 @@ class User implements JsonSerializable
         public readonly string|null     $recoverPassword,
         public readonly string     $email,
         public readonly string     $jobTitle,
-        public readonly ?\DateTime $createdAt,
-        public readonly ?\DateTime $updatedAt)
+        public readonly int        $roleId,
+        public readonly ?\DateTime $createdAt = new \DateTime('now'),
+        public readonly ?\DateTime $updatedAt = new \DateTime('now'))
     {
         $this->username = strtolower($username);
         $this->firstName = ucfirst($firstName);

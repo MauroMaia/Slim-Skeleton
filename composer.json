@@ -13,7 +13,8 @@
         "slim/csrf": "^1.3",
         "slim/psr7": "^1.6",
         "slim/slim": "^4.12",
-        "twig/twig": "^v3.6.1"
+        "twig/twig": "^v3.6.1",
+        "ext-http": "*"
     },
     "require-dev": {
         "jangregor/phpstan-prophecy": "^1.0.0",

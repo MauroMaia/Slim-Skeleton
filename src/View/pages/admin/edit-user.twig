@@ -39,6 +39,19 @@
                                         <input id="jobTitle" name="jobTitle"
                                                 class="form-control" type="text" value="{{ user.jobTitle }}" >
                                     </div>
+
+                                    <div class="form-group col-md-6">
+                                        <label for="role" class="text-fader">Role</label>
+                                        <select class="form-control" id="role" name="role">
+                                            {% for role in roles %}
+                                                {%  if role.id == user_role.id %}
+                                                    <option value="{{ role.id }}" selected>{{ role.name }}</option>
+                                                {% else %}
+                                                    <option value="{{ role.id }}">{{ role.name }}</option>
+                                                {%  endif %}
+                                            {% endfor %}
+                                        </select>
+                                    </div>
                                 </div>
 
                                 <div class="form-group">

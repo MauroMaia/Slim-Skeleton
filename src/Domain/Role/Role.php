@@ -12,8 +12,8 @@ readonly class Role implements JsonSerializable
         public ?int       $id,
         public string     $name,
         public array $permissions,
-        public ?\DateTime $createdAt,
-        public ?\DateTime $updatedAt) { }
+        public ?\DateTime $createdAt = new \DateTime('now'),
+        public ?\DateTime $updatedAt = new \DateTime('now')) { }
 
     #[\ReturnTypeWillChange]
     public function jsonSerialize(): array
