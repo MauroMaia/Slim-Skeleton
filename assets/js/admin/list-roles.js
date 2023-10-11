@@ -1,19 +1,20 @@
 
 function loadData() {
     return fetch("api/roles/list", {
-        method: "GET", credentials: "same-origin", // Include cookies when making the request
+        method: "GET",
+        credentials: "same-origin", // Include cookies when making the request
     }).then(response => response.json())
         .then(function (response) {
             let fields = []
 
             for (const responseKey of response.permissions) {
                 fields = [{
-                    name: responseKey, type: "checkbox"
-
+                    name: responseKey,
+                    type: "checkbox"
                 }].concat(fields)
             }
 
-            let roles = []
+            const roles = []
 
             for (const role of response.roles) {
                 for (const perm of role.permissions) {
@@ -56,12 +57,11 @@ $(document).ready(function ()
                         type: "text",
                         align: "center",
                     }
-                ].concat(fields).concat([{type: "control"}]),
+                ].concat(fields)
+                    .concat([{type: "control"}]),
 
                 controller: {
                     insertItem: function (item) {
-                        console.log("insertItem:", item)
-
                         return $.ajax({
                             type: "PUT", url: "api/roles/", data: item
                         }).then(() => location.reload());
@@ -73,7 +73,6 @@ $(document).ready(function ()
                             return
                         }
 
-                        console.log("updateItem", item)
                         if (item) {
                             return $.ajax({
                                 url: "api/roles/" + item.id, data: item, type: "POST"
@@ -95,8 +94,8 @@ $(document).ready(function ()
                     },
 
 					loadData: function () {
-						console.log("loadData:")
-                        return loadData().then(([_,roles]) => roles)
+                        return loadData()
+                            .then(([_,roles]) => roles)
 					},
                 },
             })

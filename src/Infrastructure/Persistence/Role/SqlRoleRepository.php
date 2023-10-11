@@ -27,13 +27,18 @@ readonly class SqlRoleRepository implements RoleRepository
     public function findAll(): array
     {
         $result = $this->db->runWithParams(
-            "SELECT * from role r
-                        left join slim.role_permission rp on r.id = rp.role_id
-                        where rp.enabled = true || rp.enabled is null", []);
+            "SELECT * FROM role
+                        LEFT JOIN role_permission  ON role.id = role_permission.role_id
+                        WHERE role.deleted = false AND
+                            (
+                                role_permission.enabled = true ||
+                                role_permission.enabled is null
+                            )"
+        );
 
         $roles =[];
 
-        foreach ($result as $index => $line)
+        foreach ($result as $line)
         {
             //continue;
             if(!array_key_exists($line['id'], $roles))
@@ -64,11 +69,16 @@ readonly class SqlRoleRepository implements RoleRepository
     public function find(int $roleId): bool|Role
     {
         $result = $this->db->runWithParams(
-            "SELECT * from role r
-                        left join slim.role_permission rp on r.id = rp.role_id
-                        where r.id = ? and (
-                            rp.enabled = true || rp.enabled is null
-                        )", [$roleId]);
+            "SELECT * FROM role
+                        LEFT JOIN role_permission on role.id = role_permission.role_id
+                        WHERE role.deleted = false AND
+                            role.id = ? AND
+                            ( 
+                                role_permission.enabled = true || 
+                                role_permission.enabled is null
+                            );",
+            [$roleId]
+        );
 
         if($result === false) return false;
 
@@ -102,7 +112,11 @@ readonly class SqlRoleRepository implements RoleRepository
     public function delete(int $roleId): bool
     {
         if($roleId <= 3) return false;
-        $this->db->runWithParams("DELETE FROM role WHERE id = ?;", [$roleId]);
+
+        $this->db->runWithParams(
+            "UPDATE role SET deleted = true WHERE id = ?;",
+            [$roleId]
+        );
 
         return true;
     }
@@ -133,19 +147,19 @@ readonly class SqlRoleRepository implements RoleRepository
     {
         // update role
         $result = $this->db->runWithParams(
-            "update role set name = ? where id = ?", [$role->name, $role->id]);
+            "UPDATE role SET name = ? WHERE id = ?", [$role->name, $role->id]);
         $this->logger->debug("added new role",['name'=>$role->name,'role_inserted'=>$result]);
 
         if($result === false) return false;
 
         $result = $this->db->runWithParams(
-            "update role_permission set enabled = false where role_id = ?", [$role->id]);
+            "UPDATE role_permission SET enabled = false WHERE role_id = ?", [$role->id]);
         $this->logger->debug("Disabled all role_permission for id",['id'=>$role->id,'role_inserted'=>$result]);
 
         foreach ($role->permissions as $permission)
         {
             $this->db->insert(
-                "INSERT into role_permission (role_id, permission, enabled) values (?,?,?)   
+                "INSERT INTO role_permission (role_id, permission, enabled) VALUES (?,?,?)   
                             ON DUPLICATE KEY UPDATE enabled = ?",
                 [$role->id, $permission, true,true]
             );
