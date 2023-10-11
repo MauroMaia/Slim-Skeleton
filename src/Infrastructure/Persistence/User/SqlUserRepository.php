@@ -28,7 +28,8 @@ readonly class SqlUserRepository implements UserRepository
     public function add(User $user): User
     {
         $result = $this->db->insert(
-            "INSERT INTO user(username, firstName, lastName, email, password, jobTitle) values (?,?,?,?,?,?);",
+            "INSERT INTO user(username, firstName, lastName, email, password, jobTitle)
+                    VALUES (?,?,?,?,?,?);",
             [
                 $user->getUsername(),
                 $user->getFirstName(),
@@ -43,7 +44,7 @@ readonly class SqlUserRepository implements UserRepository
         $user->id = (int)$result;
 
         $result = $this->db->insert(
-            "INSERT INTO user_role(user_id, role_id) values (?,?);",
+            "INSERT INTO user_role(user_id, role_id) VALUES (?,?);",
             [
                 $user->id,
                 $user->roleId
@@ -62,9 +63,9 @@ readonly class SqlUserRepository implements UserRepository
     {
         $result = $this->db->runWithParams(
             "SELECT user.*, user_role.role_id  
-                FROM user
-                    INNER JOIN user_role ON user.id = user_role.user_id;",
-            []
+                    FROM user
+                        INNER JOIN user_role ON user.id = user_role.user_id
+                    WHERE user.deleted = false;"
         );
 
         foreach ($result as $index => $line) {
@@ -93,9 +94,9 @@ readonly class SqlUserRepository implements UserRepository
     {
         $result = $this->db->runWithParams(
             "SELECT user.*, user_role.role_id 
-                        FROM user
-                            INNER JOIN user_role ON user.id = user_role.user_id
-                    WHERE user.id = ?;",
+                FROM user
+                    INNER JOIN user_role ON user.id = user_role.user_id
+                WHERE user.deleted = false AND user.id = ?;",
             [$id]
         );
 
@@ -126,7 +127,7 @@ readonly class SqlUserRepository implements UserRepository
             "SELECT user.*, user_role.role_id  
                 FROM user 
                     INNER JOIN user_role ON user.id = user_role.user_id
-            WHERE username = ? LIMIT 1;",
+                WHERE user.deleted = false AND username = ? LIMIT 1;",
             [$username]
         );
 
@@ -153,7 +154,7 @@ readonly class SqlUserRepository implements UserRepository
             "SELECT user.*, user_role.role_id  
                 FROM user 
                     INNER JOIN user_role ON user.id = user_role.user_id
-         where email = ? LIMIT 1;",
+                WHERE user.deleted = false AND user.email = ? LIMIT 1;",
             [$email]
         );
 
@@ -177,7 +178,7 @@ readonly class SqlUserRepository implements UserRepository
     public function updateUserPassword(User $user, string $newHash): bool
     {
         $result = $this->db->runWithParams(
-            "UPDATE user SET password = ? WHERE id = ?;",
+            "UPDATE user SET password = ? WHERE deleted = false AND id = ?;",
             [$newHash, $user->id]
         );
 
@@ -189,7 +190,7 @@ readonly class SqlUserRepository implements UserRepository
     public function updateUserRecoverPassword(User $user, string $newHash): bool
     {
         $result = $this->db->runWithParams(
-            "UPDATE user SET recoverPassword = ?, password = '' WHERE id = ?;",
+            "UPDATE user SET recoverPassword = ?, password = '' WHERE deleted = false AND id = ?;",
             [
                 $newHash,
                 $user->id
@@ -206,7 +207,7 @@ readonly class SqlUserRepository implements UserRepository
         if($userId == 1) return false;
 
         $result = $this->db->runWithParams(
-            "DELETE FROM user WHERE id = ?;",
+            "UPDATE user set deleted = true WHERE id = ?;",
             [$userId]
         );
 
@@ -217,18 +218,19 @@ readonly class SqlUserRepository implements UserRepository
     {
         $result = $this->db->runWithParams(
             "
-                SELECT ur.user_id,
+                SELECT user_role.user_id,
                    IF(permission = 'ADMIN', rp.enabled, 0) AS admin,
                    CASE
                        WHEN permission = 'ADMIN' THEN rp.enabled
                        WHEN permission = 'LIST_USER' THEN rp.enabled
                        ELSE 0
                    END AS list_user
-                from  user_role ur
-                inner join role r on ur.role_id = r.id
-                inner join slim.role_permission rp on r.id = rp.role_id
-                       WHERE ur.user_id = ?
-                GROUP BY ur.user_id",
+                FROM  user_role
+                    INNER JOIN user                 ON user_role.role_id = user.id
+                    INNER JOIN role                 ON user_role.role_id = role.id
+                    INNER JOIN role_permission rp   ON role.id = rp.role_id
+                WHERE user.deleted = false AND user_role.user_id = ?
+                GROUP BY user_role.user_id",
             [$userId]
         );
 

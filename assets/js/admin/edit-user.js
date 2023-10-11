@@ -1,7 +1,7 @@
 "use strict"
 
 $(document).ready(function () {
-	$("#firstName, #lastName, #email, #jobTitle").change(function () {
+	$("#firstName, #lastName, #email, #jobTitle, #role").change(function () {
 
 		const firstName = $("#firstName").val()
 		const lastName = $("#lastName").val()

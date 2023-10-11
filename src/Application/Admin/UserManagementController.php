@@ -75,7 +75,7 @@ class UserManagementController
             password:        password_hash($password, null),
             recoverPassword: '',
             email:           $request->getParsedBody()['email'],
-            jobTitle:        '',
+            jobTitle:        $request->getParsedBody()['jobTitle'],
             roleId:          $request->getParsedBody()['role']
         );
 

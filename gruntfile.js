@@ -91,13 +91,13 @@ module.exports = function(grunt) {
     //
     eslint: {
       browserFiles: {
-        src: [
-          "assets/js/**/*js",
-          "!assets/js/**/*.min.js",
+        /*src: [
+          "assets/js/** /*js",
+          "!assets/js/** /*.min.js",
           "!assets/js/app.js",
           "!assets/js/script.js",
           "!assets/js/script/*.js",
-        ]
+        ]*/
       }
     },
 
