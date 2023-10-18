@@ -1,5 +1,6 @@
 {
     "name": "mfm/slim-skeleton",
+    "version": "1.0.0",
     "require": {
         "php": "^8.2",
         "ext-json": "*",

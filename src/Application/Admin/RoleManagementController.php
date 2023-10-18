@@ -63,8 +63,10 @@ class RoleManagementController
         $id = $this->roleRepository->create(new Role(
             null,
             $body['name'],
-            array_filter(array_column(Permissions::cases(), 'value'), fn($element) => $body[$element]),
-            null, null
+            array_filter(
+                array_column(Permissions::cases(), 'value'),
+                fn( $element) => filter_var($body[$element],FILTER_VALIDATE_BOOLEAN) == true
+            )
         ));
 
         if(!$id){
