@@ -10,7 +10,8 @@ create table if not exists role
     name            text                                 not null,
     deleted         boolean  default false               not null,
     created_at      datetime default current_timestamp() not null,
-    updated_at      datetime default current_timestamp() not null on update current_timestamp()
+    updated_at      datetime default current_timestamp() not null on update current_timestamp(),
+    constraint User_username_pk unique (name) using hash
 );
 
 create table if not exists user

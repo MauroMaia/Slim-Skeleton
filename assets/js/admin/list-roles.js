@@ -49,7 +49,7 @@ $(document).ready(function ()
                         title: "#",
                         align: "center",
                         type: "number",
-                        width: 20,
+                        width: 30,
                         editing: false
                     },
                     {
